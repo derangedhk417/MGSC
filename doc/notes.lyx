@@ -1711,7 +1711,9 @@ V & \equiv3i+1\\
 Q & \equiv3i+2\\
 \mathcal{U} & \equiv3j\\
 \mathcal{V} & \equiv3j+1\\
-\mathcal{Q} & \equiv3j+2
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
 \end{align*}
 
 \end_inset
@@ -1737,6 +1739,117 @@ I will refer to
  potential energy due to electron - nucleus interactions.
  I will omit many steps in this derivation, because it is a more simple
  case of the electron - electron integral.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{2} & =-\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\left(\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\right)\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+ & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{J}_{ij}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\hat{\mathcal{I}}_{2} & \equiv\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{J}_{ij}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\mathcal{I}_{2} & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\hat{\mathcal{I}}_{2}\\
+\hat{\mathcal{I}}_{2} & =\left(\prod_{k\notin\mathbb{Y}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{J}_{ij}\prod_{k\in\mathbb{Y}}\mathcal{W}_{kwl}\,d\mathbb{Y}_{1}\cdots\,d\mathbb{Y}_{n}\right)\\
+\mathbb{Y} & =\left\{ x_{3j},\,x_{3j+1},\,x_{3j+2}\right\} \\
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & =\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{J}_{ij}\prod_{k\in\mathbb{Y}}\mathcal{W}_{kwl}dx_{3j}\,dx_{3j+1}\,dx_{3j+2}\\
+ & =\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\infty}\cfrac{\mathcal{R}_{1}r_{1}^{2}\sin\theta_{1}}{\sqrt{r_{1}^{2}+R_{i}^{2}-2r_{1}R_{i}\cos\theta_{1}}}\,dr_{1}\,d\theta_{1}\,d\phi_{1}\\
+\mathcal{R}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{w\mathcal{U}l}+\cos\phi_{1}V_{w\mathcal{U}l}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{w\mathcal{V}l}+\sin\phi_{1}V_{w\mathcal{V}l}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying the same subsitution as with the electron - electron integral,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{1}\cfrac{\mathcal{R}_{1}\left(\cfrac{1}{u_{1}}-1\right)^{2}\sin\theta_{1}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+R_{i}^{2}-2\left(\cfrac{1}{u_{1}}-1\right)R_{i}\cos\theta_{1}}}\cfrac{1}{u_{1}^{2}}\,du_{1}\,d\theta_{1}\,d\phi_{1}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The final explicit defnition of the electron - nucleus integral can nnow
+ be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{2} & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\left(\prod_{k\notin\mathbb{Y}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{2}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{1}\cfrac{\mathcal{R}_{1}\left(\cfrac{1}{u_{1}}-1\right)^{2}\sin\theta_{1}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+R_{i}^{2}-2\left(\cfrac{1}{u_{1}}-1\right)R_{i}\cos\theta_{1}}}\cfrac{1}{u_{1}^{2}}\,du_{1}\,d\theta_{1}\,d\phi_{1}\\
+\mathcal{R}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{w\mathcal{U}l}+\cos\phi_{1}V_{w\mathcal{U}l}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{w\mathcal{V}l}+\sin\phi_{1}V_{w\mathcal{V}l}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+r_{1} & \equiv\cfrac{1}{u_{1}}-1\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Expectation Value of the Hamiltonian
+\end_layout
+
+\begin_layout Standard
+The full expectation value of the Hamiltonian, in a form that is ready to
+ be evaluated numerically in a computer, is written below, in as explicit
+ a manner as possible.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle H\right\rangle  & =\left\langle T\right\rangle +\left\langle V\right\rangle \\
+\\
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\pi^{\frac{n+1}{2}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\Gamma_{ijj^{\prime}}\prod_{l\neq i}^{n}D_{ljj^{\prime}}^{-1/2}\exp\left[\cfrac{F_{ljj^{\prime}}^{2}}{4D_{ljj^{\prime}}}\right]\right\} \\
+\Gamma_{ijj^{\prime}} & \equiv\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\left\{ \left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)D_{ijj^{\prime}}^{-1/2}+\left[A_{ii}^{\left(j\right)}\right]^{2}\left(2D_{ijj^{\prime}}+F_{ijj^{\prime}}^{2}\right)D_{ijj^{\prime}}^{-5/2}-2A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}F_{ijj^{\prime}}D_{ijj^{\prime}}^{-3/2}\right\} \\
+D_{kjj^{\prime}} & \equiv A_{kk}^{\left(j^{\prime}\right)}+A_{kk}^{\left(j\right)}\\
+F_{kjj^{\prime}} & =s_{k}^{\left(j^{\prime}\right)}+s_{k}^{\left(j\right)}\\
+\\
+\left\langle V\right\rangle  & =\cfrac{q_{e}B^{2}}{4\pi\epsilon_{0}}\left(\mathcal{I}_{1}+\mathcal{I}_{2}\right)\\
+\mathcal{I}_{1} & =q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\left(\prod_{k\notin\mathbb{X}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{1}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{1}\int_{0}^{1}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}\left(\cfrac{1}{u_{1}}-1\right)^{2}\left(\cfrac{1}{u_{2}}-1\right)^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+\left(\cfrac{1}{u_{2}}-1\right)^{2}-2\left(\cfrac{1}{u_{1}}-1\right)\left(\cfrac{1}{u_{2}}-1\right)\cos\left(\theta_{1}-\theta_{2}\right)}}\cfrac{1}{u_{1}^{2}u_{2}^{2}}\,du_{1}\,du_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}\\
+\mathcal{I}_{2} & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\left(\prod_{k\notin\mathbb{Y}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{2}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{1}\cfrac{\mathcal{R}_{1}\left(\cfrac{1}{u_{1}}-1\right)^{2}\sin\theta_{1}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+R_{i}^{2}-2\left(\cfrac{1}{u_{1}}-1\right)R_{i}\cos\theta_{1}}}\cfrac{1}{u_{1}^{2}}\,du_{1}\,d\theta_{1}\,d\phi_{1}\\
+\mathcal{R}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{w\mathcal{U}l}+\cos\phi_{1}V_{w\mathcal{U}l}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{w\mathcal{V}l}+\sin\phi_{1}V_{w\mathcal{V}l}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+\mathcal{P}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{wUl}+\cos\phi_{1}V_{wUl}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{wVl}+\sin\phi_{1}V_{wVl}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{wQl}+V_{wQl}\right]\right\} \right]\\
+\mathcal{P}_{2} & \equiv\exp\left[r_{2}\left\{ \sin\theta_{2}\left[-r_{2}\sin\theta_{2}\cos^{2}\phi_{2}Y_{w\mathcal{U}l}+\cos\phi_{2}V_{w\mathcal{U}l}-r_{2}\sin\theta_{2}\sin^{2}\phi_{2}Y_{w\mathcal{V}l}+\sin\phi_{2}V_{w\mathcal{V}l}\right]-\cos\theta_{2}\left[r_{2}\cos\theta_{2}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+r_{1} & \equiv\cfrac{1}{u_{1}}-1\\
+r_{2} & \equiv\cfrac{1}{u_{2}}-1\\
+U & \equiv3i\\
+V & \equiv3i+1\\
+Q & \equiv3i+2\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\\
+\mathbb{X} & =\left\{ x_{3i},\,x_{3j},\,x_{3i+1},\,x_{3j+1},\,x_{3i+2},\,x_{3j+2}\right\} \\
+\mathbb{Y} & =\left\{ x_{3j},\,x_{3j+1},\,x_{3j+2}\right\} 
+\end{align*}
+
+\end_inset
+
+
 \end_layout
 
 \end_body
