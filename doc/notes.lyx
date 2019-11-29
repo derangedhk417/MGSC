@@ -1110,6 +1110,13 @@ Potential Energy Integral
 \end_layout
 
 \begin_layout Standard
+The integral that defines the expectation value of the potential energy
+ can be written as follows (in cartesian coordinates).
+ In order to better formulate it, I will rewrite the Hamiltonian in terms
+ of individual coordinates, rather than cartesian vectors in three dimensions.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
 \int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}V\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}
@@ -1121,13 +1128,14 @@ Potential Energy Integral
 \begin_inset Newline newline
 \end_inset
 
+The original definition of the potential energy portion of the integrand
+ was
+\end_layout
 
+\begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
-\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2} & =B^{2}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j^{\prime}\right)}\mathbf{x}+\mathbf{s}^{\left(j^{\prime}\right)T}\mathbf{x}\right]\\
- & =B^{2}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\left(\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)\\
- & =B^{2}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\prod_{l=1}^{n}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]
+V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}
 \end{align*}
 
 \end_inset
@@ -1136,94 +1144,169 @@ V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j
 \begin_inset Newline newline
 \end_inset
 
-Separating the expectation value of the potential energy into two terms
- and applying the integral, the problem becomes
+Now, rewritten
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+V\psi^{2}= & \cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
+\mathcal{D}_{ij} & =\cfrac{1}{\sqrt{\left(x_{i}-x_{j}\right)^{2}+\left(x_{i+1}-x_{j+1}\right)^{2}+\left(x_{i+2}-x_{j+2}\right)^{2}}}\\
+\mathcal{J}_{ij} & =\cfrac{1}{\sqrt{\left(R_{i}-x_{j}\right)^{2}+\left(R_{i+1}-x_{j+1}\right)^{2}+\left(R_{i+2}-x_{j+2}\right)^{2}}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, we simplify the square of the wavefunction
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & \equiv B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\\
+-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x} & =-\sum_{k=1}^{n}x_{k}^{2}A_{kk}^{\left(j\right)}+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\\
+\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2} & =\left(B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\right)\left(B\sum_{l=1}^{m}C_{l}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(l\right)}\mathbf{x}+\mathbf{s}^{\left(l\right)T}\mathbf{x}\right]\right)\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(l\right)}\mathbf{x}+\mathbf{s}^{\left(l\right)T}\mathbf{x}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}-\mathbf{x}^{T}\mathbf{A}^{\left(l\right)}\mathbf{x}+\mathbf{s}^{\left(l\right)T}\mathbf{x}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[-\sum_{k=1}^{n}x_{k}^{2}A_{kk}^{\left(j\right)}+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}-\sum_{k=1}^{n}x_{k}^{2}A_{kk}^{\left(l\right)}+\sum_{k=1}^{n}s_{k}^{\left(l\right)}x_{k}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[\sum_{k=1}^{n}\left(-x_{k}^{2}A_{kk}^{\left(j\right)}+s_{k}^{\left(j\right)}x_{k}-x_{k}^{2}A_{kk}^{\left(l\right)}+s_{k}^{\left(l\right)}x_{k}\right)\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[\sum_{k=1}^{n}\left\{ -x_{k}^{2}\left(A_{kk}^{\left(j\right)}+A_{kk}^{\left(l\right)}\right)+x_{k}\left(s_{k}^{\left(j\right)}+s_{k}^{\left(l\right)}\right)\right\} \right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For formatting purposes, I will make the following definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{K}_{lj} & \equiv\sum_{k=1}^{n}\left\{ -x_{k}^{2}\left(A_{kk}^{\left(j\right)}+A_{kk}^{\left(l\right)}\right)+x_{k}\left(s_{k}^{\left(j\right)}+s_{k}^{\left(l\right)}\right)\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The full expression for the expectation value of the potential energy can
+ then be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle  & =\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]B^{2}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Performing some basic simplification of this expressions,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle  & =\cfrac{q_{e}B^{2}}{4\pi\epsilon_{0}}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, it is convenient to split this into two integrals,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle  & =\cfrac{q_{e}B^{2}}{4\pi\epsilon_{0}}\left(\mathcal{I}_{1}+\mathcal{I}_{2}\right)\\
+\mathcal{I}_{1} & =q_{e}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}\left(\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\right)\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\mathcal{I}_{2} & =-\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\left(\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\right)\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Neither or these integrals can be computed analytically, except for the
+ most trivial values of the shape matrix and shift matrix.
+ In order to to determine their value, numerical methods must be applied.
+ Before developing an approximation for these expressions, they must be
+ simplified further.
+ Before performing any simplifications, I will make the following observation,
+ which will be helpful.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\cfrac{q_{e}^{2}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
-\cfrac{-q_{e}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}\label{eq:v_exp_second}
+\exp\left[\mathcal{K}_{lw}\right] & =\exp\left[\sum_{k=1}^{n}\left\{ -x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)+x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right\} \right]\nonumber \\
+\exp\left[\mathcal{K}_{lw}\right] & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\label{eq:lkjdjgpjsdigjsdg}
 \end{align}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+The Electron - Electron Integral
+\end_layout
+
+\begin_layout Standard
+I will refer to 
+\begin_inset Formula $\mathcal{I}_{1}$
+\end_inset
+
+ as the electron - electron integral, because it is used to calculate the
+ potential energy due to electron - electron interactions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{1} & =q_{e}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}\mathcal{D}_{ij}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
 \begin_inset Newline newline
 \end_inset
 
-Both of these integrals can be broken into groups of integrands that depend
- on the variable of integration and those that do not.
- Taking eq.
+Applying eq.
  
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:v_exp_second"
+reference "eq:lkjdjgpjsdigjsdg"
 
 \end_inset
 
- first and moving the integral into the expression.
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align}
-\left\langle V\right\rangle _{B.O.} & =\cfrac{-q_{e}B^{2}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{u}}\sum_{k=1}^{N_{e}}Q_{i}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left|\mathbf{R}_{i}-\mathbf{r}_{k}\right|^{-1}\prod_{l=1}^{n}\Omega_{ljj^{\prime}}\,dx_{1}\,dx_{2}\cdots\,dx_{n}\label{eq:v_b_o_unsimplified}\\
-\Omega_{ljj^{\prime}} & \equiv\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\nonumber 
-\end{align}
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Here, the subscript B.O.
- is short for Born-Oppenheimer, because this part of the potential energy
- integral is based on the Born-Oppenheimer approximation.
- The critical step in this integration is recognizing that the integrand
- can be broken up into a product of multiple integrands, each of which depends
- on three sequential cartesian coordinates.
- This is due to the reciprocal magnitude term containing sets of three cartesian
- coordinates inside a square root.
- Each such integral can now be defined to be
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\mathcal{I}_{ikljj^{\prime}}^{\left(B.O.\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\Omega_{ljj^{\prime}}}{\sqrt{\left(R_{ix}-r_{kx}\right)^{2}+\left(R_{iy}-r_{ky}\right)^{2}+\left(R_{iz}-r_{kz}\right)^{2}}}dr_{kx}\,dr_{ky}\,dr_{kz}\label{eq:b_o_primary_integral}
-\end{align}
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Where the elements of 
-\begin_inset Formula $\Omega_{ljj^{\prime}}$
-\end_inset
-
- can be separated into those that pertain to the variables of integration
- and thos that do not.
- Eq.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:v_b_o_unsimplified"
-
-\end_inset
-
- can now be written
+,
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\left\langle V\right\rangle _{B.O.} & =\cfrac{-q_{e}B^{2}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{u}}\sum_{k=1}^{N_{e}}Q_{i}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\prod_{\nu=1}^{\frac{n}{3}}\mathcal{I}_{ik\left(3\nu\right)jj^{\prime}}^{\left(B.O.\right)}
+\mathcal{I}_{1} & =q_{e}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}\mathcal{D}_{ij}C_{w}C_{l}\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
 \end{align*}
 
 \end_inset
@@ -1232,35 +1315,13 @@ reference "eq:v_b_o_unsimplified"
 \begin_inset Newline newline
 \end_inset
 
-The notation above is somewhat hard to parse.
- The product is meant to indicate a set of integrals, where each integral
- is over three spatial coordinates, each corresponding to a single electron.
- Once eq.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:b_o_primary_integral"
-
-\end_inset
-
- is worked out, the meaning of this expression will become more clear.
- Written more explicitely, eq.
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:b_o_primary_integral"
-
-\end_inset
-
- is
+Moving the integrals inside of the sums,
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\mathcal{I}_{ikljj^{\prime}}^{\left(B.O.\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\exp\left[-r_{kx}^{2}D_{kxjj^{\prime}}+r_{kx}F_{kxjj^{\prime}}-r_{ky}^{2}D_{kyjj^{\prime}}+r_{ky}F_{kyjj^{\prime}}-r_{kz}^{2}D_{kzjj^{\prime}}+r_{kz}F_{kzjj^{\prime}}\right]}{\sqrt{\left(R_{ix}-r_{kx}\right)^{2}+\left(R_{iy}-r_{ky}\right)^{2}+\left(R_{iz}-r_{kz}\right)^{2}}}dr_{kx}\,dr_{ky}\,dr_{kz}\\
-D_{kajj^{\prime}} & =A_{kaka}^{\left(j^{\prime}\right)}+A_{kaka}^{\left(j\right)}\\
-F_{kajj^{\prime}} & =s_{kx}^{\left(j^{\prime}\right)}+s_{kx}^{\left(j\right)}
+\mathcal{I}_{1} & =q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
 \end{align*}
 
 \end_inset
@@ -1269,21 +1330,16 @@ F_{kajj^{\prime}} & =s_{kx}^{\left(j^{\prime}\right)}+s_{kx}^{\left(j\right)}
 \begin_inset Newline newline
 \end_inset
 
-This integral cannot be calculated analytically in cartesian or polar coordinate
-s.
- 
-\end_layout
-
-\begin_layout Section
-Appendix A: Generalized Integration By Parts
+Next, we apply the fact that an integral of a product of independent factors
+ is equivalent to a product of integrals of independent factors.
+ First, I will extract the integral term from the expression above in order
+ to keep the expression on a single line.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =f_{1}\left(x\right)\cfrac{d}{dx}\prod_{i=2}^{n}f_{i}\left(x\right)+\left(\prod_{i=2}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{1}\left(x\right)\\
- & =\left(\prod_{i=2}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{1}\left(x\right)+f_{1}\left(x\right)\left[\left(\prod_{i=3}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{2}\left(x\right)+f_{2}\left(x\right)\cfrac{d}{dx}\prod_{i=3}^{n}f_{i}\left(x\right)\right]\\
- & =\left(\prod_{i=2}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{1}\left(x\right)+f_{1}\left(x\right)\left(\prod_{i=3}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{2}\left(x\right)+f_{1}\left(x\right)f_{2}\left(x\right)\cfrac{d}{dx}\prod_{i=3}^{n}f_{i}\left(x\right)
+\hat{\mathcal{I}}_{1} & \equiv\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
 \end{align*}
 
 \end_inset
@@ -1292,18 +1348,19 @@ Appendix A: Generalized Integration By Parts
 \begin_inset Newline newline
 \end_inset
 
-
-\begin_inset Newline newline
+It is important to note that in the above expression, the integrals can
+ be separated into a number of integrals that do not depend on 
+\begin_inset Formula $\mathcal{D}_{ij}$
 \end_inset
 
-From this, we can define the derivative of the generalized product to be
- a sum of terms
+ and six integrals that do.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =\sum_{i=1}^{n}F_{i-1}\left(x\right)\left(\prod_{i^{\prime}=i+1}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)
+\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}^{n}\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k}\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}^{n}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)\\
+\mathcal{W}_{kwl} & \equiv\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]
 \end{align*}
 
 \end_inset
@@ -1312,105 +1369,40 @@ From this, we can define the derivative of the generalized product to be
 \begin_inset Newline newline
 \end_inset
 
-Where 
-\begin_inset Formula 
-\begin{align*}
-F_{n}\left(x\right) & \equiv f_{n}\left(x\right)f_{n-1}\left(x\right)\cdots f_{1}\left(x\right)\\
-F_{0}\left(x\right) & \equiv1
-\end{align*}
-
+In the expressions above, the set 
+\begin_inset Formula $\mathbb{X}$
 \end_inset
 
-This can be simplified as follows
-\begin_inset Newline newline
+ is the set of six input coordinates 
+\begin_inset Formula $\left\{ x_{1},\,x_{2},\,\cdots,\,x_{n}\right\} $
 \end_inset
 
-
-\begin_inset Formula 
-\begin{align*}
-\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =\sum_{i=1}^{n}\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)
-\end{align*}
-
+ that are the same as the input coordinates in 
+\begin_inset Formula $\mathcal{D}_{ij}$
 \end_inset
 
-
-\begin_inset Newline newline
+.
+ All of the integrals in the left term of 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}$
 \end_inset
 
-
-\begin_inset Newline newline
-\end_inset
-
-Recall the derivation of integration by parts
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\cfrac{d}{dx}f\left(x\right)g\left(x\right) & =g\left(x\right)\cfrac{d}{dx}f\left(x\right)+f\left(x\right)\cfrac{d}{dx}g\left(x\right)\\
-\int\cfrac{d}{dx}f\left(x\right)g\left(x\right) & =\int g\left(x\right)\cfrac{d}{dx}f\left(x\right)+\int f\left(x\right)\cfrac{d}{dx}g\left(x\right)\\
-f\left(x\right)g\left(x\right) & =\int g\left(x\right)\cfrac{d}{dx}f\left(x\right)+\int f\left(x\right)\cfrac{d}{dx}g\left(x\right)\\
-\int g\left(x\right)\cfrac{d}{dx}f\left(x\right) & =f\left(x\right)g\left(x\right)-\int f\left(x\right)\cfrac{d}{dx}g\left(x\right)
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Or, in the more common notation
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\int gf^{\prime} & =fg-\int fg^{\prime}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Next, using the same argument, we derive a generalization for any number
- of products in the intgrand.
+ can be calculated analytically.
+ The integral in the right term cannot be calculated analytically.
+ The integral in the left term,
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\int\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =\int\sum_{i=1}^{n}\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)\\
-\prod_{i=1}^{n}f_{i}\left(x\right) & =\sum_{i=1}^{n}\int\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)
+\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k} & =\int_{-\infty}^{\infty}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{k}\\
+ & =\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
 \end{align*}
 
 \end_inset
 
 
-\begin_inset Newline newline
-\end_inset
-
-From the expression on the right of the equal sign, we can extract any chosen
- element of the sum and move it to the left hand side.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\int\left(\prod_{i^{\prime}\neq\gamma}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{\gamma}\left(x\right) & =\prod_{i=1}^{n}f_{i}\left(x\right)-\sum_{i\neq\gamma}^{n}\int\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)\label{eq:general_int_by_parts}
-\end{align}
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-This provides us with a means of reasoning about the products in the integrand
- of the kinetic energy function.
 \end_layout
 
 \end_body

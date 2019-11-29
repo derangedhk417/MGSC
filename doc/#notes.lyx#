@@ -1359,7 +1359,43 @@ It is important to note that in the above expression, the integrals can
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}^{n}\int_{-\infty}^{\infty}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{k}\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,d\mathbb{X}_{1}\,d\mathbb{X}_{2}\cdots\,d\mathbb{X}_{n}\right)
+\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}^{n}\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k}\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}^{n}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)\\
+\mathcal{W}_{kwl} & \equiv\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In the expressions above, the set 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ is the set of six input coordinates 
+\begin_inset Formula $\left\{ x_{1},\,x_{2},\,\cdots,\,x_{n}\right\} $
+\end_inset
+
+ that are the same as the input coordinates in 
+\begin_inset Formula $\mathcal{D}_{ij}$
+\end_inset
+
+.
+ All of the integrals in the left term of 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}$
+\end_inset
+
+ can be calculated analytically.
+ The integral in the right term cannot be calculated analytically.
+ The integral in the left term,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k} & =\int_{-\infty}^{\infty}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{k}\\
+ & =\sqrt{\cfrac{\pi}{A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}}}\exp\left[\\cfrac\right]
 \end{align*}
 
 \end_inset
