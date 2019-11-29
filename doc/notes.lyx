@@ -1,0 +1,1417 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{braket}
+\usepackage{amsmath}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Ai}{Ai}
+\DeclareMathOperator{\Bi}{Bi}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "Ground State Calculator: Notes"
+\pdf_author "Adam Robinson"
+\pdf_subject "Variational Principle Ground State Calculator Notes"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Ground State Calculator: Mathematics and Development Notes
+\end_layout
+
+\begin_layout Author
+Adam J.
+ Robinson
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Gaussian Functions
+\end_layout
+
+\begin_layout Standard
+This section covers important properties of Gaussian functions generalized
+ to any number of dimensions in cartesian coordinates.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For the purposes of this program and its documentation, a Gaussian function
+ in 
+\begin_inset Formula $n$
+\end_inset
+
+ dimensions will be defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{G}_{n}\left(\mathbf{x}\right) & \equiv\exp\left[-\mathbf{x}^{T}\mathbf{A}\mathbf{x}+\mathbf{s}^{T}\mathbf{x}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathbf{x} & =\left[\begin{array}{c}
+x_{1}\\
+x_{2}\\
+\vdots\\
+x_{n-1}\\
+x_{n}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+and is a column vector of input coordinates for the Gaussian function.
+ 
+\begin_inset Formula $\mathbf{s}$
+\end_inset
+
+ is a length 
+\begin_inset Formula $n$
+\end_inset
+
+ column vector that defines the shift of the function.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathbf{s} & =\left[\begin{array}{c}
+s_{1}\\
+s_{2}\\
+\vdots\\
+s_{n-1}\\
+s_{n}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ matrix of values that define the shape of the Gaussian function.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathbf{A} & =\left[\begin{array}{ccc}
+A_{11} & \cdots & A_{1n}\\
+\vdots & \ddots & \vdots\\
+A_{n1} & \cdots & A_{nn}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This matrix is symmetric and positive definite, meaning that
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathbf{z}^{T}\mathbf{A}\mathbf{z} & >0\;\forall\;\sum_{i}\left|z_{i}\right|\;>0,\;z_{i}\in\mathbb{R}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The integral of such a Gaussian function over all space
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{\mathbb{R}^{n}}\mathcal{G}_{n}\left(\mathbf{x}\right)\,d\mathbf{x} & =\sqrt{\cfrac{\pi^{n}}{\det\mathbf{A}}}\exp\left[\frac{1}{4}\mathbf{s}^{T}\mathbf{A}^{-1}\mathbf{s}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula $\mathbf{A}^{-1}$
+\end_inset
+
+ denotes the inverse of the matrix 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+General Equations
+\end_layout
+
+\begin_layout Standard
+This section defines equations that are generally applicable.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For a given normalized wavefunction 
+\begin_inset Formula 
+\begin{align*}
+\psi & =\psi\left(\mathbf{x}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+the expectation value of the Hamiltonian in cartesian coordinates is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle H\right\rangle  & =\int_{\mathbb{R}^{n}}\psi^{*}H\psi\,d\mathbf{x}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For a system of 
+\begin_inset Formula $N_{u}$
+\end_inset
+
+ atomic nuclei approximated as points with 
+\begin_inset Formula $N_{e}$
+\end_inset
+
+ electrons orbiting them and the Born-Oppenheimer approximation applied,
+ the Hamiltonian of the system is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =\cfrac{-\hbar^{2}}{2m_{e}}\left[\sum_{n=1}^{N_{e}}\nabla_{n}^{2}\psi\left(\mathbf{x}\right)\right]+\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{n=1}^{N_{e}}\sum_{m>n}^{N_{e}}\left|\mathbf{r}_{n}-\mathbf{r}_{m}\right|^{-1}-\sum_{n=1}^{N_{u}}\sum_{m=1}^{N_{e}}Q_{n}\left|\mathbf{R}_{n}-\mathbf{r}_{m}\right|^{-1}\right]\psi\left(\mathbf{x}\right)\label{eq:born_oppenheimer_hamiltonian}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where 
+\begin_inset Formula $\nabla_{n}^{2}$
+\end_inset
+
+ denotes the cartesian Laplacian of the wavefunction with respect to the
+ 
+\begin_inset Formula $n$
+\end_inset
+
+th electrons position, 
+\begin_inset Formula $m_{e}$
+\end_inset
+
+ denotes the mass of the electron, 
+\begin_inset Formula $q_{e}$
+\end_inset
+
+ denotes the charge of the electron (positive), 
+\begin_inset Formula $\mathbf{r}_{n}$
+\end_inset
+
+ denotes the position of the 
+\begin_inset Formula $n$
+\end_inset
+
+th electron w.r.t the origin, 
+\begin_inset Formula $\mathbf{R}_{n}$
+\end_inset
+
+ denotes the position of the 
+\begin_inset Formula $n$
+\end_inset
+
+th nucleus w.r.t the origin and 
+\begin_inset Formula $Q_{n}$
+\end_inset
+
+ denotes the charge of the 
+\begin_inset Formula $n$
+\end_inset
+
+th nucleus.
+ Because of the definition of the Laplacian in cartesian coordinates, this
+ expression can be rewritten as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =\cfrac{-\hbar^{2}}{2m_{e}}\left[\sum_{i=1}^{3N_{e}}\cfrac{\partial^{2}}{\partial x_{i}^{2}}\psi\left(\mathbf{x}\right)\right]+\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{n=1}^{N_{e}}\sum_{m>n}^{N_{e}}\left|\mathbf{r}_{n}-\mathbf{r}_{m}\right|^{-1}-\sum_{n=1}^{N_{u}}\sum_{m=1}^{N_{e}}Q_{n}\left|\mathbf{R}_{n}-\mathbf{r}_{m}\right|^{-1}\right]\psi\left(\mathbf{x}\right)\label{eq:born_oppenheimer_hamiltonian-1}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Here, each Laplacian term has been replaced by three, 2nd partial derivative
+ terms.
+ In each term, 
+\begin_inset Formula $x_{n}$
+\end_inset
+
+ denotes the 
+\begin_inset Formula $n$
+\end_inset
+
+th input coordinate of the trial wavefunction.
+\end_layout
+
+\begin_layout Section
+Gaussian Trial Function
+\end_layout
+
+\begin_layout Standard
+The Gaussian Trial function is defined
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & \equiv B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula $m$
+\end_inset
+
+ is the number of Gaussian terms in the trial function, 
+\begin_inset Formula $B$
+\end_inset
+
+ is a normalization constant, 
+\begin_inset Formula $C_{j}$
+\end_inset
+
+ is an arbitrary real constant, 
+\begin_inset Formula $\mathbf{A}^{\left(j\right)}$
+\end_inset
+
+ defines the shape matrix of the 
+\begin_inset Formula $j$
+\end_inset
+
+th term in the trial function and 
+\begin_inset Formula $\mathbf{s}^{\left(j\right)T}$
+\end_inset
+
+ is the transpose of the shift vector of the 
+\begin_inset Formula $j$
+\end_inset
+
+th term in the trial function.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Simplifying the Hamiltonian
+\end_layout
+
+\begin_layout Standard
+In order to simplify the Hamiltonian, for the purposes of computing its
+ expectation value, it is necessary to better define
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)=\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+First, convert the interior of the exponential into a sum
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x} & =-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}
+\end{align*}
+
+\end_inset
+
+Note that since 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is symmetric, the term 
+\begin_inset Formula $A_{kl}$
+\end_inset
+
+ in the inner sum can also be written 
+\begin_inset Formula $A_{lk}$
+\end_inset
+
+.
+ The symmetry of 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ also means that all off diagonal terms in the sum have an identical term
+ in the sum corresponing to their element in 
+\begin_inset Formula $\mathbf{A}^{T}$
+\end_inset
+
+.
+ This means that only one half of the off diagonal terms need to actually
+ be computed.
+ Their value can then be doubled.
+ Re-writing the derivative
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =B\sum_{j=1}^{m}C_{j}\cfrac{\partial^{2}}{\partial x_{i}^{2}}\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\\
+let\;\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right] & =\hat{\mathcal{G}}^{\left(j\right)}\\
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right] & =\cfrac{\partial}{\partial x_{i}}\left\{ \hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\right\} \\
+\cfrac{\partial}{\partial x_{i}}\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right] & =-\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}s_{k}^{\left(j\right)}x_{k}\\
+ & =-\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+s_{i}^{\left(j\right)}\\
+\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right) & =\sum_{k=1}^{n}\left[\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\cfrac{\partial}{\partial x_{i}}x_{k}+x_{k}\cfrac{\partial}{\partial x_{i}}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\\
+\sum_{k=1}^{n}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\cfrac{\partial}{\partial x_{i}}x_{k} & =\sum_{k=1}^{n}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\delta_{ik}\\
+ & =\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}\\
+\sum_{k=1}^{n}x_{k}\cfrac{\partial}{\partial x_{i}}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right) & =\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{l}A_{kl}^{\left(j\right)}\right)\\
+ & =\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}A_{kl}^{\left(j\right)}\delta_{li}\right)\\
+ & =\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Combining all of the sub-terms derived above and applying the second derivative
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial}{\partial x_{i}}\left\{ \hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\right\}  & =\cfrac{\partial}{\partial x_{i}}\left\{ \hat{\mathcal{G}}^{\left(j\right)}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+=\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\cfrac{\partial}{\partial x_{i}}\hat{\mathcal{G}}^{\left(j\right)}+\hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+As derived above,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial}{\partial x_{i}}\hat{\mathcal{G}}^{\left(j\right)} & =\hat{\mathcal{G}}^{\left(j\right)}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Completing the second derivative terms
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\cfrac{\partial}{\partial x_{i}}\hat{\mathcal{G}}^{\left(j\right)} & =\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\hat{\mathcal{G}}^{\left(j\right)}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\\
+ & =\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}\\
+\hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right] & =\hat{\mathcal{G}}^{\left(j\right)}\left\{ -\sum_{l=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}A_{ki}^{\left(j\right)}\right\} \\
+ & =\hat{\mathcal{G}}^{\left(j\right)}\left\{ -\sum_{l=1}^{n}A_{il}^{\left(j\right)}\delta_{li}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}\delta_{ki}\right\} \\
+ & =\hat{\mathcal{G}}^{\left(j\right)}\left\{ -A_{ii}^{\left(j\right)}-A_{ii}^{\left(j\right)}\right\} \\
+ & =-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Finally
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\hat{\mathcal{G}}^{\left(j\right)} & =\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Meaning that
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =B\sum_{j=1}^{m}C_{j}\left\{ \left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}\right\} \\
+ & =B\sum_{j=1}^{m}C_{j}\left\{ \left[-\left(\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}+x_{k}A_{ki}^{\left(j\right)}\right)+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Recalling that 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is symmetric,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =B\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{G}}^{\left(j\right)} & =\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying this definition to simplify the Hamiltonian, the kinetic energy
+ portion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+T\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =\cfrac{-\hbar^{2}}{2m_{e}}\left[\sum_{i=1}^{n}B\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \right]\\
+ & =\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+No derivatives need to be calculated for the potential energy portion, so
+ it can be written
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+V\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Simplifying the Expectation Value of the Hamiltonian
+\end_layout
+
+\begin_layout Standard
+The expectation value of the Hamiltonian for this system can be written
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{\mathbb{R}^{q}}\psi^{*}H\psi\,d\mathbf{x} & =\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\psi^{*}H\psi\,dx_{1}\,dx_{2}\cdots\,dx_{q}\\
+\psi^{*}H\psi & =\psi^{*}\left(T\psi+V\psi\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the number of inputs to the trial function.
+ Since the trial function is real, 
+\begin_inset Formula $\psi^{*}=\psi$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\psi^{*}\left(T\psi+V\psi\right) & =\psi T\psi+V\psi^{2}\\
+V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
+\psi T\psi & =\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Breaking up the integral
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{\mathbb{R}^{q}}\psi^{*}H\psi\,d\mathbf{x} & =\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\psi T\psi\,dx_{1}\,dx_{2}\cdots\,dx_{n}+\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}V\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Kinetic Energy Integral
+\end_layout
+
+\begin_layout Standard
+In order to calculate the integral,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\psi T\psi\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+it is necessary to break it up into a product of integrals w.r.t each 
+\begin_inset Formula $dx_{n}$
+\end_inset
+
+ to the furthest extent that it is possible.
+ In order to do this, it is necessary to express the function 
+\begin_inset Formula $\hat{\mathcal{G}}\left(\mathbf{x}\right)$
+\end_inset
+
+ in terms of a product of multiple exponential functions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\hat{\mathcal{G}}^{\left(j\right)} & =\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\nonumber \\
+ & =\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\nonumber \\
+ & =\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\exp\left[\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\nonumber \\
+\exp\left[\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right] & =\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\nonumber \\
+\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right] & =\prod_{k=1}^{n}\exp\left[-x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\nonumber \\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}-x_{k}\left(\sum_{l\neq k}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\nonumber \\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[-\sum_{l\neq k}^{n}x_{k}x_{l}A_{kl}^{\left(j\right)}\right]\nonumber \\
+ & =\prod_{k=1}^{n}\left\{ \exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\left(\prod_{l\neq k}^{n}\exp\left[-x_{k}x_{l}A_{kl}^{\left(j\right)}\right]\right)\right\} \nonumber \\
+\therefore\hat{\mathcal{G}}^{\left(j\right)} & =\left[\prod_{k=1}^{n}\left\{ \exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\left(\prod_{l\neq k}^{n}\exp\left[-x_{k}x_{l}A_{kl}^{\left(j\right)}\right]\right)\right\} \right]\left[\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right]\label{eq:gaussian_term_expanded}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+At this point, it becomes convenient to apply a significant simplification,
+ at the expense of removing some generality from the trial function.
+ Now, assume that 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is a diagonal matrix, more explicitely
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+A_{ij} & =0\;for\;i\neq j
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying this to eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gaussian_term_expanded"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{G}}^{\left(j\right)} & =\left[\prod_{k=1}^{n}\left\{ \exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\left(\cancelto{1}{\prod_{l\neq k}^{n}\exp\left[-x_{k}x_{l}A_{kl}^{\left(j\right)}\right]}\right)\right\} \right]\left[\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right]\\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]
+\end{align*}
+
+\end_inset
+
+Using this to write the expression 
+\begin_inset Formula $\psi T\psi$
+\end_inset
+
+ as explicitely as possible
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\psi T\psi & =\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \\
+ & =\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left(\sum_{j^{\prime}=1}^{m}C_{j^{\prime}}\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\times\\
+ & \sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)\left\{ \left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\left(\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)\times\\
+ & \left(\left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, we simplify the two product terms
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left(\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+ & =\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\exp\left[-x_{l}^{2}A_{ll}^{\left(j\right)}\right]\exp\left[s_{l}^{\left(j\right)}x_{l}\right]\\
+ & =\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}-x_{l}^{2}A_{ll}^{\left(j\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}+s_{l}^{\left(j\right)}x_{l}\right]\\
+ & =\prod_{l=1}^{n}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+Inserting this into the original expression.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\psi T\psi & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\left(\left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)\prod_{l=1}^{n}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+Expanding the last term in the above expression.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)} & =\left[s_{i}^{\left(j\right)}\right]^{2}+4x_{i}^{2}\left[A_{ii}^{\left(j\right)}\right]^{2}-4x_{i}A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}-2A_{ii}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This allows for the integral that defines the expectation value of the kinetic
+ energy to be simplified significantly.
+ First, recall that 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+\int\cdots\int\int\prod_{i=1}^{n}f_{i}\left(x_{i}\right)\,dx_{1}dx_{2}\cdots\,dx_{N} & =\prod_{i=1}^{n}\int f_{i}\left(x_{i}\right)\,dx_{i}\label{eq:product_integral_identity}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Emphasis being on the fact that all functions in the integrand depend on
+ a single variable of integration, never more, never less.
+ Before applying this, we allow the following definitions, in order to be
+ concise.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+let\;f\left(x_{l}\right) & =\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\\
+let\;g\left(x_{i}\right) & =\left[s_{i}^{\left(j\right)}\right]^{2}+4x_{i}^{2}\left[A_{ii}^{\left(j\right)}\right]^{2}-4x_{i}A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}-2A_{ii}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+We now write the expectation value of the kinetic energy
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\int\cdots\int\int\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}g\left(x_{i}\right)\prod_{l=1}^{n}f\left(x_{l}\right)\right\} \,dx_{1}dx_{2}\cdots dx_{n}\\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\int\cdots\int\int g\left(x_{i}\right)\prod_{l=1}^{n}f\left(x_{l}\right)\,dx_{1}dx_{2}\cdots dx_{n}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\int\cdots\int\int g\left(x_{i}\right)f\left(x_{i}\right)\prod_{l\neq i}^{n}f\left(x_{l}\right)\,dx_{1}dx_{2}\cdots dx_{n}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\int g\left(x_{i}\right)f\left(x_{i}\right)\,dx_{i}\prod_{l\neq i}^{n}\int f\left(x_{l}\right)\,dx_{l}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This now leaves us with only the following two integrals to calculate.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{\infty}f\left(x_{l}\right)\,dx_{l} & =\int_{-\infty}^{\infty}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\,dx_{l}\\
+\int_{-\infty}^{\infty}g\left(x_{i}\right)f\left(x_{i}\right)\,dx_{i} & =\int_{-\infty}^{\infty}\left(\left[s_{i}^{\left(j\right)}\right]^{2}+4x_{i}^{2}\left[A_{ii}^{\left(j\right)}\right]^{2}-4x_{i}A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\right)\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)+x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The second integral can be split into a sum of three integrals, making the
+ full list of integrals to be computed
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+I_{1} & \equiv\int_{-\infty}^{\infty}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\,dx_{l}\\
+I_{2} & \equiv\left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)\int_{-\infty}^{\infty}\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)\right]\exp\left[x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}\\
+I_{3} & \equiv4\left[A_{ii}^{\left(j\right)}\right]^{2}\int_{-\infty}^{\infty}x_{i}^{2}\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)\right]\exp\left[x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}\\
+I_{4} & \equiv-4A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}\int_{-\infty}^{\infty}x_{i}\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)\right]\exp\left[x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}
+\end{align*}
+
+\end_inset
+
+All of which can be computed analytically.
+ First,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+let\;D_{ljj^{\prime}} & =A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\\
+let\;F_{ljj^{\prime}} & =s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\\
+I_{1} & =\sqrt{\cfrac{\pi}{D_{ljj^{\prime}}}}\exp\left[\cfrac{F_{ljj^{\prime}}^{2}}{4D_{ljj^{\prime}}}\right]\\
+I_{2} & =\left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)\sqrt{\cfrac{\pi}{D_{ijj^{\prime}}}}\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\\
+I_{3} & =\left[A_{ii}^{\left(j\right)}\right]^{2}\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\left(2D_{ijj^{\prime}}+F_{ijj^{\prime}}^{2}\right)\sqrt{\cfrac{\pi}{D_{ijj^{\prime}}^{5}}}\\
+I_{4} & =-4A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]F_{ijj^{\prime}}\sqrt{\cfrac{\pi}{4D_{ijj^{\prime}}^{3}}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+We are now equipped to write a complete, closed form solution to the expectation
+ value of the kinetic energy.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\left(I_{2}+I_{3}+I_{4}\right)\prod_{l\neq i}^{n}I_{1}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The completely expanded form being
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\pi^{\frac{n+1}{2}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\Gamma_{ijj^{\prime}}\prod_{l\neq i}^{n}D_{ljj^{\prime}}^{-1/2}\exp\left[\cfrac{F_{ljj^{\prime}}^{2}}{4D_{ljj^{\prime}}}\right]\right\} \\
+\Gamma_{ijj^{\prime}} & \equiv\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\left\{ \left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)D_{ijj^{\prime}}^{-1/2}+\left[A_{ii}^{\left(j\right)}\right]^{2}\left(2D_{ijj^{\prime}}+F_{ijj^{\prime}}^{2}\right)D_{ijj^{\prime}}^{-5/2}-2A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}F_{ijj^{\prime}}D_{ijj^{\prime}}^{-3/2}\right\} \\
+D_{kjj^{\prime}} & \equiv A_{kk}^{\left(j^{\prime}\right)}+A_{kk}^{\left(j\right)}\\
+F_{kjj^{\prime}} & =s_{k}^{\left(j^{\prime}\right)}+s_{k}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Potential Energy Integral
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}V\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
+\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2} & =B^{2}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j^{\prime}\right)}\mathbf{x}+\mathbf{s}^{\left(j^{\prime}\right)T}\mathbf{x}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\left(\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\prod_{l=1}^{n}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Separating the expectation value of the potential energy into two terms
+ and applying the integral, the problem becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\cfrac{q_{e}^{2}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\cfrac{-q_{e}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}\label{eq:v_exp_second}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Both of these integrals can be broken into groups of integrands that depend
+ on the variable of integration and those that do not.
+ Taking eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:v_exp_second"
+
+\end_inset
+
+ first and moving the integral into the expression.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+\left\langle V\right\rangle _{B.O.} & =\cfrac{-q_{e}B^{2}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{u}}\sum_{k=1}^{N_{e}}Q_{i}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left|\mathbf{R}_{i}-\mathbf{r}_{k}\right|^{-1}\prod_{l=1}^{n}\Omega_{ljj^{\prime}}\,dx_{1}\,dx_{2}\cdots\,dx_{n}\label{eq:v_b_o_unsimplified}\\
+\Omega_{ljj^{\prime}} & \equiv\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\nonumber 
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Here, the subscript B.O.
+ is short for Born-Oppenheimer, because this part of the potential energy
+ integral is based on the Born-Oppenheimer approximation.
+ The critical step in this integration is recognizing that the integrand
+ can be broken up into a product of multiple integrands, each of which depends
+ on three sequential cartesian coordinates.
+ This is due to the reciprocal magnitude term containing sets of three cartesian
+ coordinates inside a square root.
+ Each such integral can now be defined to be
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mathcal{I}_{ikljj^{\prime}}^{\left(B.O.\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\Omega_{ljj^{\prime}}}{\sqrt{\left(R_{ix}-r_{kx}\right)^{2}+\left(R_{iy}-r_{ky}\right)^{2}+\left(R_{iz}-r_{kz}\right)^{2}}}dr_{kx}\,dr_{ky}\,dr_{kz}\label{eq:b_o_primary_integral}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where the elements of 
+\begin_inset Formula $\Omega_{ljj^{\prime}}$
+\end_inset
+
+ can be separated into those that pertain to the variables of integration
+ and thos that do not.
+ Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:v_b_o_unsimplified"
+
+\end_inset
+
+ can now be written
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle _{B.O.} & =\cfrac{-q_{e}B^{2}}{4\pi\epsilon_{0}}\sum_{i=1}^{N_{u}}\sum_{k=1}^{N_{e}}Q_{i}\sum_{j=1}^{m}\sum_{j^{\prime}=1}^{m}C_{j}C_{j^{\prime}}\prod_{\nu=1}^{\frac{n}{3}}\mathcal{I}_{ik\left(3\nu\right)jj^{\prime}}^{\left(B.O.\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The notation above is somewhat hard to parse.
+ The product is meant to indicate a set of integrals, where each integral
+ is over three spatial coordinates, each corresponding to a single electron.
+ Once eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:b_o_primary_integral"
+
+\end_inset
+
+ is worked out, the meaning of this expression will become more clear.
+ Written more explicitely, eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:b_o_primary_integral"
+
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{ikljj^{\prime}}^{\left(B.O.\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\exp\left[-r_{kx}^{2}D_{kxjj^{\prime}}+r_{kx}F_{kxjj^{\prime}}-r_{ky}^{2}D_{kyjj^{\prime}}+r_{ky}F_{kyjj^{\prime}}-r_{kz}^{2}D_{kzjj^{\prime}}+r_{kz}F_{kzjj^{\prime}}\right]}{\sqrt{\left(R_{ix}-r_{kx}\right)^{2}+\left(R_{iy}-r_{ky}\right)^{2}+\left(R_{iz}-r_{kz}\right)^{2}}}dr_{kx}\,dr_{ky}\,dr_{kz}\\
+D_{kajj^{\prime}} & =A_{kaka}^{\left(j^{\prime}\right)}+A_{kaka}^{\left(j\right)}\\
+F_{kajj^{\prime}} & =s_{kx}^{\left(j^{\prime}\right)}+s_{kx}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This integral cannot be calculated analytically in cartesian or polar coordinate
+s.
+ 
+\end_layout
+
+\begin_layout Section
+Appendix A: Generalized Integration By Parts
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =f_{1}\left(x\right)\cfrac{d}{dx}\prod_{i=2}^{n}f_{i}\left(x\right)+\left(\prod_{i=2}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{1}\left(x\right)\\
+ & =\left(\prod_{i=2}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{1}\left(x\right)+f_{1}\left(x\right)\left[\left(\prod_{i=3}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{2}\left(x\right)+f_{2}\left(x\right)\cfrac{d}{dx}\prod_{i=3}^{n}f_{i}\left(x\right)\right]\\
+ & =\left(\prod_{i=2}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{1}\left(x\right)+f_{1}\left(x\right)\left(\prod_{i=3}^{n}f_{i}\left(x\right)\right)\cfrac{d}{dx}f_{2}\left(x\right)+f_{1}\left(x\right)f_{2}\left(x\right)\cfrac{d}{dx}\prod_{i=3}^{n}f_{i}\left(x\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+From this, we can define the derivative of the generalized product to be
+ a sum of terms
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =\sum_{i=1}^{n}F_{i-1}\left(x\right)\left(\prod_{i^{\prime}=i+1}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula 
+\begin{align*}
+F_{n}\left(x\right) & \equiv f_{n}\left(x\right)f_{n-1}\left(x\right)\cdots f_{1}\left(x\right)\\
+F_{0}\left(x\right) & \equiv1
+\end{align*}
+
+\end_inset
+
+This can be simplified as follows
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =\sum_{i=1}^{n}\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Recall the derivation of integration by parts
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\cfrac{d}{dx}f\left(x\right)g\left(x\right) & =g\left(x\right)\cfrac{d}{dx}f\left(x\right)+f\left(x\right)\cfrac{d}{dx}g\left(x\right)\\
+\int\cfrac{d}{dx}f\left(x\right)g\left(x\right) & =\int g\left(x\right)\cfrac{d}{dx}f\left(x\right)+\int f\left(x\right)\cfrac{d}{dx}g\left(x\right)\\
+f\left(x\right)g\left(x\right) & =\int g\left(x\right)\cfrac{d}{dx}f\left(x\right)+\int f\left(x\right)\cfrac{d}{dx}g\left(x\right)\\
+\int g\left(x\right)\cfrac{d}{dx}f\left(x\right) & =f\left(x\right)g\left(x\right)-\int f\left(x\right)\cfrac{d}{dx}g\left(x\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Or, in the more common notation
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\int gf^{\prime} & =fg-\int fg^{\prime}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, using the same argument, we derive a generalization for any number
+ of products in the intgrand.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int\cfrac{d}{dx}\prod_{i=1}^{n}f_{i}\left(x\right) & =\int\sum_{i=1}^{n}\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)\\
+\prod_{i=1}^{n}f_{i}\left(x\right) & =\sum_{i=1}^{n}\int\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+From the expression on the right of the equal sign, we can extract any chosen
+ element of the sum and move it to the left hand side.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\int\left(\prod_{i^{\prime}\neq\gamma}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{\gamma}\left(x\right) & =\prod_{i=1}^{n}f_{i}\left(x\right)-\sum_{i\neq\gamma}^{n}\int\left(\prod_{i^{\prime}\neq i}^{n}f_{i^{\prime}}\left(x\right)\right)\cfrac{d}{dx}f_{i}\left(x\right)\label{eq:general_int_by_parts}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This provides us with a means of reasoning about the products in the integrand
+ of the kinetic energy function.
+\end_layout
+
+\end_body
+\end_document
