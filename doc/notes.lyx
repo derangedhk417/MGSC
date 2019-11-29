@@ -76,10 +76,10 @@
 \shortcut idx
 \color #008000
 \end_index
-\leftmargin 2cm
-\topmargin 2cm
-\rightmargin 2cm
-\bottommargin 2cm
+\leftmargin 1cm
+\topmargin 1.5cm
+\rightmargin 1cm
+\bottommargin 1.5cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -1151,8 +1151,8 @@ Now, rewritten
 \begin_inset Formula 
 \begin{align*}
 V\psi^{2}= & \cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
-\mathcal{D}_{ij} & =\cfrac{1}{\sqrt{\left(x_{i}-x_{j}\right)^{2}+\left(x_{i+1}-x_{j+1}\right)^{2}+\left(x_{i+2}-x_{j+2}\right)^{2}}}\\
-\mathcal{J}_{ij} & =\cfrac{1}{\sqrt{\left(R_{i}-x_{j}\right)^{2}+\left(R_{i+1}-x_{j+1}\right)^{2}+\left(R_{i+2}-x_{j+2}\right)^{2}}}
+\mathcal{D}_{ij} & =\cfrac{1}{\sqrt{\left(x_{3i}-x_{3j}\right)^{2}+\left(x_{3i+1}-x_{3j+1}\right)^{2}+\left(x_{3i+2}-x_{3j+2}\right)^{2}}}\\
+\mathcal{J}_{ij} & =\cfrac{1}{\sqrt{\left(R_{3i}-x_{3j}\right)^{2}+\left(R_{3i+1}-x_{3j+1}\right)^{2}+\left(R_{3i+2}-x_{3j+2}\right)^{2}}}
 \end{align*}
 
 \end_inset
@@ -1359,7 +1359,7 @@ It is important to note that in the above expression, the integrals can
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}^{n}\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k}\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}^{n}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)\\
+\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k}\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)\\
 \mathcal{W}_{kwl} & \equiv\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]
 \end{align*}
 
@@ -1403,6 +1403,340 @@ V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
 \end_inset
 
 
+\begin_inset Newline newline
+\end_inset
+
+The integral 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}$
+\end_inset
+
+ now reads,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+What remains is to simplify the integral on the right and put it in a form
+ that is reasonable to integrate numerically.
+ The full integral can be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]}{\sqrt{\left(x_{3i}-x_{3j}\right)^{2}+\left(x_{3i+1}-x_{3j+1}\right)^{2}+\left(x_{3i+2}-x_{3j+2}\right)^{2}}}\,dx_{3i}\,dx_{3j}\,dx_{3i+1}\,dx_{3j+1}\,dx_{3i+2}\,dx_{3j+2}\\
+\mathbb{X} & =\left\{ x_{3i},\,x_{3j},\,x_{3i+1},\,x_{3j+1},\,x_{3i+2},\,x_{3j+2}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+As states above, this cannot be computed analytically, but it can be re-written
+ in a form that is readily computed numerically.
+ First, we move the integral from six cartesian coordinates to six polar
+ coordinates.
+ In this case, we treat 
+\begin_inset Formula $x_{3i}$
+\end_inset
+
+, 
+\begin_inset Formula $x_{3i+1}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{3i+2}$
+\end_inset
+
+ as the cartesian coordinates corresponding to the first set of polar coordinate
+s and we treet the remaining coordinates as corresponding to the second
+ set of polar coordinates.
+ More explicitely,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+x_{3i} & =r_{1}\sin\theta_{1}\cos\phi_{1}\\
+x_{3i+1} & =r_{1}\sin\theta_{1}\sin\phi_{1}\\
+x_{3i+2} & =r_{1}\cos\theta_{1}\\
+x_{3j} & =r_{2}\sin\theta_{2}\cos\phi_{2}\\
+x_{3j+1} & =r_{2}\sin\theta_{2}\sin\phi_{2}\\
+x_{3j+2} & =r_{2}\cos\theta_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The term 
+\begin_inset Formula $\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|$
+\end_inset
+
+ in spherical coordinates can be rewritten
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right| & =\sqrt{r_{1}^{2}+r_{2}^{2}-2r_{1}r_{2}\cos\left(\theta_{1}-\theta_{2}\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The integral 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}^{\left(1\right)}$
+\end_inset
+
+ can now be written
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{\infty}\int_{0}^{\infty}\cfrac{\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]}{\sqrt{r_{1}^{2}+r_{2}^{2}-2r_{1}r_{2}\cos\left(\theta_{1}-\theta_{2}\right)}}r_{1}^{2}r_{2}^{2}\sin\theta_{1}\sin\theta_{2}\,dr_{1}\,dr_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The numerator term must still be re-written in order to complete the explicit
+ definition of the integral.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right] & \equiv\mathcal{P}_{1}\mathcal{P}_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathcal{P}_{1} & \equiv\exp\left[-x_{3i}^{2}Y_{w\left(3i\right)l}+x_{3i}V_{w\left(3i\right)l}-x_{3i+1}^{2}Y_{w\left(3i+1\right)l}+x_{3i+1}V_{w\left(3i+1\right)l}-x_{3i+2}^{2}Y_{w\left(3i+2\right)l}+x_{3i+2}V_{w\left(3i+2\right)l}\right]\\
+ & =\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{wUl}+\cos\phi_{1}V_{wUl}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{wVl}+\sin\phi_{1}V_{wVl}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{wQl}+V_{wQl}\right]\right\} \right]\\
+U & \equiv3i\\
+V & \equiv3i+1\\
+Q & \equiv3i+2\\
+\mathcal{P}_{2} & \equiv\exp\left[-x_{3j}^{2}Y_{w\left(3j\right)l}+x_{3j}V_{w\left(3j\right)l}-x_{3j+1}^{2}Y_{w\left(3j+1\right)l}+x_{3j+1}V_{w\left(3j+1\right)l}-x_{3j+2}^{2}Y_{w\left(3j+2\right)l}+x_{3j+2}V_{w\left(3j+2\right)l}\right]\\
+ & =\exp\left[r_{2}\left\{ \sin\theta_{2}\left[-r_{2}\sin\theta_{2}\cos^{2}\phi_{2}Y_{w\mathcal{U}l}+\cos\phi_{2}V_{w\mathcal{U}l}-r_{2}\sin\theta_{2}\sin^{2}\phi_{2}Y_{w\mathcal{V}l}+\sin\phi_{2}V_{w\mathcal{V}l}\right]-\cos\theta_{2}\left[r_{2}\cos\theta_{2}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The substitutions made for the indices above are meant to keep each expression
+ on a single line.
+ We can now write 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}^{\left(1\right)}$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{\infty}\int_{0}^{\infty}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}r_{1}^{2}r_{2}^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{r_{1}^{2}+r_{2}^{2}-2r_{1}r_{2}\cos\left(\theta_{1}-\theta_{2}\right)}}\,dr_{1}\,dr_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In order to make this integral more manageable numerically, it is helpful
+ to define a subsitution that brings the range of the integrals down to
+ a finite number.
+ For this purpose, I will make the following subsitutions,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+u_{1} & =\cfrac{1}{1+r_{1}}\\
+u_{2} & =\cfrac{1}{1+r_{2}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+These substitutions will bring the range of the integral from 
+\begin_inset Formula $\left[0,\,\infty\right)$
+\end_inset
+
+ to 
+\begin_inset Formula $\left[1,\,0\right]$
+\end_inset
+
+, making them much more maneageable for a numerical integration method.
+ They will however, introduce poles to the resulting integrand, which will
+ need to be managed carefully.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+du_{1} & =-\cfrac{1}{\left(1+r_{1}\right)^{2}}dr_{1}\\
+dr_{1} & =-\left(1+r_{1}\right)^{2}\,du_{1}\\
+r_{1} & =\cfrac{1}{u_{1}}-1\\
+dr_{1} & =-\cfrac{1}{u_{1}^{2}}\,du_{1}\\
+du_{2} & =-\cfrac{1}{\left(1+r_{2}\right)^{2}}dr_{2}\\
+dr_{2} & =-\left(1+r_{2}\right)^{2}\,du_{2}\\
+r_{2} & =\cfrac{1}{u_{2}}-1\\
+dr_{2} & =-\cfrac{1}{u_{2}^{2}}\,du_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Subsituting these into the integral and omitting an explicit redefinition
+ of 
+\begin_inset Formula $\mathcal{P}_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{P}_{2}$
+\end_inset
+
+ (because they are trivial),
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{1}^{0}\int_{1}^{0}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}\left(\cfrac{1}{u_{1}}-1\right)^{2}\left(\cfrac{1}{u_{2}}-1\right)^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+\left(\cfrac{1}{u_{2}}-1\right)^{2}-2\left(\cfrac{1}{u_{1}}-1\right)\left(\cfrac{1}{u_{2}}-1\right)\cos\left(\theta_{1}-\theta_{2}\right)}}\cfrac{1}{u_{1}^{2}u_{2}^{2}}\,du_{1}\,du_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This expression is now significantly easier to integrate numerically.
+ It does have a few poles, which must be treated carefully.
+ The poles are at the following points,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+u_{1} & =0\\
+u_{2} & =0\\
+u_{1}=u_{2} & =1
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In order to mitigate the effects of these poles, it is necessary to adopt
+ an integration technique that increases the resolution of its step with
+ proportion to the change in the integrand.
+ More specifically,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Delta u_{1} & \propto\cfrac{\partial}{\partial u_{1}}\;\mathsf{Integrand}\\
+\Delta u_{2} & \propto\cfrac{\partial}{\partial u_{2}}\;\mathsf{Integrand}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The exact method applied for this integration will be discussed in detail
+ later.
+ The full expression for the electron - electron integral can now be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{1} & =q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\left(\prod_{k\notin\mathbb{X}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{1}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{1}\int_{0}^{1}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}\left(\cfrac{1}{u_{1}}-1\right)^{2}\left(\cfrac{1}{u_{2}}-1\right)^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+\left(\cfrac{1}{u_{2}}-1\right)^{2}-2\left(\cfrac{1}{u_{1}}-1\right)\left(\cfrac{1}{u_{2}}-1\right)\cos\left(\theta_{1}-\theta_{2}\right)}}\cfrac{1}{u_{1}^{2}u_{2}^{2}}\,du_{1}\,du_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}\\
+\mathcal{P}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{wUl}+\cos\phi_{1}V_{wUl}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{wVl}+\sin\phi_{1}V_{wVl}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{wQl}+V_{wQl}\right]\right\} \right]\\
+\mathcal{P}_{2} & \equiv\exp\left[r_{2}\left\{ \sin\theta_{2}\left[-r_{2}\sin\theta_{2}\cos^{2}\phi_{2}Y_{w\mathcal{U}l}+\cos\phi_{2}V_{w\mathcal{U}l}-r_{2}\sin\theta_{2}\sin^{2}\phi_{2}Y_{w\mathcal{V}l}+\sin\phi_{2}V_{w\mathcal{V}l}\right]-\cos\theta_{2}\left[r_{2}\cos\theta_{2}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+r_{1} & \equiv\cfrac{1}{u_{1}}-1\\
+r_{2} & \equiv\cfrac{1}{u_{2}}-1\\
+U & \equiv3i\\
+V & \equiv3i+1\\
+Q & \equiv3i+2\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+It's worth noting that I flipped the range on two of the integrals, but
+ this is allowed because both of the negative signs will cancel eachother.
+\end_layout
+
+\begin_layout Subsubsection
+The Electron - Nucleus Integral
+\end_layout
+
+\begin_layout Standard
+I will refer to 
+\begin_inset Formula $\mathcal{I}_{2}$
+\end_inset
+
+ as the electron - nucleus integral, because it is used to calculate the
+ potential energy due to electron - nucleus interactions.
+ I will omit many steps in this derivation, because it is a more simple
+ case of the electron - electron integral.
 \end_layout
 
 \end_body
