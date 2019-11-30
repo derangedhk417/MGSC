@@ -263,6 +263,46 @@ float hydrogenGroundState(float * input, void * a_ptr) {
 	return input[0]*expf(-a*input[0])*sinf(input[1]);
 }
 
+struct ENParams {
+	float * A;
+	float * s;
+	float R;
+	float THETA;
+};
+
+float ENIntegrand(float * input, void *EN_ptr) {
+	struct ENParams * ENP = (struct ENParams *)EN_ptr;
+
+	float Y1 = ENP->A[0];
+	float Y2 = ENP->A[1];
+	float Y3 = ENP->A[2];
+
+	float V1 = ENP->s[0];
+	float V2 = ENP->s[1];
+	float V3 = ENP->s[2];
+
+	// order: r1, theta1, phi1
+	//        0   1       2 
+
+	float r1        = input[0];
+	float sintheta1 = sinf(input[1]);
+	float costheta1 = cosf(input[1]);
+	float sinphi1   = sinf(input[2]);
+	float cosphi1   = cosf(input[2]);
+
+	float t1 = -r1*sintheta1*cosphi1*cosphi1*Y1 + cosphi1*V1 - r1*sintheta1*sinphi1*sinphi1*Y2 + sinphi1*V2;
+	float t2 = -r1*costheta1*Y3 + V3;
+	float P1 = expf(r1*(sintheta1*t1 + costheta1*t2));
+
+	float inner       = r1*r1 + (ENP->R)*(ENP->R) - 2*r1*(ENP->R)*cosf(input[1] - ENP->THETA);
+	float denominator = sqrtf(inner);
+
+	// This is pretty hacky, but it prevents the singularity from
+	// becoming an issue.
+	denominator = fmax(denominator, 1e-7);
+	return (P1 * r1*r1 * sintheta1) / denominator;
+}
+
 int main(int argc, char ** argv) {
 	// What follows is a series of tests of the integration method.
 	// All of these integrals are known analytically, so this should
@@ -339,6 +379,39 @@ int main(int argc, char ** argv) {
 	cout << "Time:             "    << duration / 1000.0 << "μs" << endl;
 	cout << endl << endl;
 
+	// ----------------------------------------------------
+	// Electron - Nucleus Integral
+	// ----------------------------------------------------
+	struct ENParams ENP;
+	float A[] = {0.5001, 1.0, 1.0};
+	float s[] = {1.0, 1.0, 1.0};
+	ENP.A     = A;
+	ENP.s     = s;
+	ENP.R     = 1.0;
+	ENP.THETA = pi / 4;
+
+    correct_value = 1.0;
+	float lower4[] = {0.0, 0.0, 0.0 };
+	float upper4[] = {45.0, pi, 2*pi};
+	DynamicIntegrator d4(ENIntegrand, lower4, upper4, 3);
+
+	d4.min_step  = 0.0005;
+	d4.max_step  = 0.5;
+	d4.min_slope = 0.05;
+	d4.max_slope = 100.0;
+	d4.setVoidPointer(&ENP);
+
+	begin    = chrono::high_resolution_clock::now();
+	result   = d4.integrate();
+	end      = chrono::high_resolution_clock::now();
+	duration = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+
+	cout << "Electron - Nucleus Integral"  << endl;
+	cout << "Analytical Value: "           << correct_value << endl;
+	cout << "Numerical Value:  "           << result        << endl;
+	cout << "Relative Error:   "           << (result - correct_value) / correct_value << endl;
+	cout << "Time:             "           << duration / 1000.0 / 1000.0 << "ms" << endl;
+	cout << endl << endl;
 	
 
 	return 0;
