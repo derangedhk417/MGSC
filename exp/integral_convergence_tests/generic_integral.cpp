@@ -92,15 +92,14 @@ public:
 	// read the function for a full understanding.
 	float integral_step(float *location, int var) {
 		if (var == nVars - 1) {
-			float point       = integrand(location, voidData)
+			float point       = integrand(location, voidData);
 			location[var]    += finite_step;
-			float incremented = integrand(location, voidData)
+			float incremented = integrand(location, voidData);
 			location[var]    -= finite_step;
 			float slope       = (incremented - point) / finite_step;
 
 			float proper_step = getStep(slope);
 			location[var] += proper_step;
-
 			float proper_incremented_value = integrand(location, voidData);
 
 			return (point + proper_incremented_value) * (proper_step / 2);
@@ -146,15 +145,122 @@ public:
 			return step_result;
 		}
 	}
-}
+};
+
+
+// This is the same as the dynamic integrator, except that
+// the step size is constant.
+class StaticIntegrator {
+public:
+	// These are the minimum and maximum increment of the 
+	// variable of integration as a function of the total
+	// range of integration. For example, if an integral
+	// is on [0, 2] and min_step is 1e-2, the minimum step
+	// size will be 2e-2.
+	// This effectively creates an upper bound on the number
+	// of steps in the integration, while allowing the number
+	// of steps to be significantly lower in cases where the
+	// integrand has a low slope.
+	float step = 0.5e-2;
+
+	void *voidData = NULL;
+
+	int     nVars;
+	float * lowerBounds;
+	float * upperBounds;
+	float (*integrand)(float *, void *);
+
+	// These are used when scaling the step size.
+	float a;
+	float b;
+
+	// Arguments:
+	// 1) The integrand, the first parameter should be the input coordinates in order.
+	//    The second parameter should be a void pointer containing any additional info
+	//    that the function needs. Call DynamicIntegrator.setVoidPointer to determine
+	//    what information should be passed.
+	// 2) An array of lower bounds for each variable.
+	// 3) An array of upper bounds for each variable.
+	// 4) The number of variables to integrate over.
+	StaticIntegrator(float (*integrand)(float *, void *), float * lower, float * upper, int n) {
+		this->integrand = integrand;
+		nVars           = n;
+		lowerBounds     = lower;
+		upperBounds     = upper;
+	}
+
+	// Used to set the additional data provided to the integrand.
+	void setVoidPointer(void *p) {
+		voidData = p;
+	}
+
+	// Returns the proper integral of the function, under the given conditions.
+	float integrate() {
+		float result = 0.0;
+
+		float * location = new float[nVars];
+
+		location[0] = lowerBounds[0];
+		while (location[0] <= upperBounds[0]) {
+			result += integral_step(location, 0);
+		}
+
+		return result;
+	}
+
+	// Recursively integrates each independent variable. Hard to explain,
+	// read the function for a full understanding.
+	float integral_step(float *location, int var) {
+		if (var == nVars - 1) {
+			float point       = integrand(location, voidData);
+			
+			location[var] += step;
+			float proper_incremented_value = integrand(location, voidData);
+
+			return (point + proper_incremented_value) * (step / 2);
+		} else {
+			// First, we get the appropriate value of the integral at this point.
+
+			float point = 0.0;
+
+			// Get a value at this point.
+			float save = location[var + 1];
+			location[var + 1] = lowerBounds[var + 1];
+			while (location[var + 1] < upperBounds[var + 1]) {
+				point += integral_step(location, var + 1);
+			}
+			location[var + 1] = save;
+
+
+			// We now know how far to step. Take the step, evaluate
+			// the integrand and determine the appropriate value to add.
+			location[var] += step;
+			float proper_incremented_value = 0.0;
+			location[var + 1] = lowerBounds[var + 1];
+			while (location[var + 1] < upperBounds[var + 1]) {
+				proper_incremented_value += integral_step(location, var + 1);
+			}
+			location[var + 1] = save;
+
+			float step_result = (point + proper_incremented_value) * (step / 2);
+
+			return step_result;
+		}
+	}
+};
 
 
 float xCubedIntegrand(float * input, void * unused) {
-	return input[0] * input[0] * input[0] 
+	return input[0] * input[0] * input[0];
 }
 
 float xCubedIntegrand2D(float * input, void * unused) {
-	return input[0] * input[0] * input[0] + input[1] * input[1] * input[1]
+	return input[0] * input[0] * input[0] + input[1] * input[1] * input[1];
+}
+
+float hydrogenGroundState(float * input, void * a_ptr) {
+	float a = *((float *)a_ptr);
+	return input[0]*expf(-a*input[0])*sinf(input[1]);
 }
 
 int main(int argc, char ** argv) {
@@ -162,28 +268,78 @@ int main(int argc, char ** argv) {
 	// All of these integrals are known analytically, so this should
 	// work.
 
+	// ----------------------------------------------------
 	// x cubed 1D
+	// ----------------------------------------------------
 	float correct_value = powrf(5.0, 4.0) * (1.0 / 4.0);
 	float lower[] = {0.0};
 	float upper[] = {5.0};
-	DynamicIntegrator d1(xCubedIntegrand, lower, upper);
+	DynamicIntegrator d1(xCubedIntegrand, lower, upper, 1);
+
+	d1.min_step = 1e-3;
+	d1.max_step = 1e-2;
 
 	auto begin = chrono::high_resolution_clock::now();
 	float result = d1.integrate();
 	auto end      = chrono::high_resolution_clock::now();
 	auto duration = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
 
+	cout << "Cubic 1D" << endl;
 	cout << "Analytical Value: " << correct_value << endl;
 	cout << "Numerical Value:  " << result        << endl;
 	cout << "Relative Error:   " << (result - correct_value) / correct_value << endl;
-	cout << "Time:             " << duration << "ns" << endl;
+	cout << "Time:             " << duration / 1000.0 << "μs" << endl;
+	cout << endl << endl;
 
-	// begin = chrono::high_resolution_clock::now();
-	// for (int i = 0; i < SIZE; i++) {
-	// 	res[i] = _mm256_mul_ps(mul01[i], mul02[i]);
-	// }
-	// end      = chrono::high_resolution_clock::now();
-	// duration = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+	// ----------------------------------------------------
+	// x cubed 2D
+	// ----------------------------------------------------
+    correct_value = 10 * correct_value;
+	float lower2[] = {0.0, 0.0};
+	float upper2[] = {5.0, 5.0};
+	DynamicIntegrator d2(xCubedIntegrand2D, lower2, upper2, 2);
+
+	d2.min_step = 0.004;
+	d2.max_step = 0.01;
+
+	begin    = chrono::high_resolution_clock::now();
+	result   = d2.integrate();
+	end      = chrono::high_resolution_clock::now();
+	duration = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+
+	cout << "Cubic 2D" << endl;
+	cout << "Analytical Value: " << correct_value << endl;
+	cout << "Numerical Value:  " << result        << endl;
+	cout << "Relative Error:   " << (result - correct_value) / correct_value << endl;
+	cout << "Time:             " << duration / 1000.0 << "μs" << endl;
+	cout << endl << endl;
+
+	// ----------------------------------------------------
+	// Hydrogen Ground State
+	// ----------------------------------------------------
+	float a       = 1.0;
+    correct_value = (4 * pi) / (a * a);
+	float lower3[] = {0.0, 0.0, 0.0};
+	float upper3[] = {25.0, pi,  2*pi};
+	DynamicIntegrator d3(hydrogenGroundState, lower3, upper3, 3);
+
+	d3.min_step  = 0.004;
+	d3.max_step  = 0.5; 
+	d3.setVoidPointer(&a);
+
+	begin    = chrono::high_resolution_clock::now();
+	result   = d3.integrate();
+	end      = chrono::high_resolution_clock::now();
+	duration = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+
+	cout << "Hydrogen Wavefunction" << endl;
+	cout << "Analytical Value: "    << correct_value << endl;
+	cout << "Numerical Value:  "    << result        << endl;
+	cout << "Relative Error:   "    << (result - correct_value) / correct_value << endl;
+	cout << "Time:             "    << duration / 1000.0 << "μs" << endl;
+	cout << endl << endl;
+
+	
 
 	return 0;
 }
