@@ -14,6 +14,18 @@
 // gaussian and the nucleus.
 const float range = 5.0;
 
+// This is passed to the integrand for the electron - nucleus
+// integral by the DynamicIntegrator class.
+struct IntegrandParameters {
+	float A1;
+	float A2;
+	float A3;
+	float s1;
+	float s2;
+	float s3;
+	float *R;
+};
+
 class GaussianWavefunction {
 public:
 	int      m;  // Number of terms
@@ -47,7 +59,7 @@ public:
 		// the integrator, so we will just pass the uninitialized
 		// arrays for now.
 		integrator = new DynamicIntegrator(
-			integrandWrapper, lowerBounds, upperBounds, 3
+			integrand, lowerBounds, upperBounds, 3
 		);
 	}
 
@@ -130,7 +142,55 @@ public:
 	// expectation value of the potential energy for the given set 
 	// of parameters.
 	float getPotentialExpectation(float B) {
-		
+		float coefficient = (N_qe*B*B) / N_fpien;
+
+		float sum = 0.0;
+		for (int iu = 0; iu < Nu; ++iu) {
+			// Normally there would be another loop here over 
+			// the number of electrons, but I'm omitting that in this
+			// version because of time constraints. I am only doing
+			// one electron systems for now.
+
+			for (int w = 0; w < m; ++w) {
+				for (int l = 0; l < m; ++l) {
+					float coefficient1 = Q[iu] * C[w] * C[l];
+					float integral     = 0.0;
+
+					// Now we need to set up and calculate the integral
+					// for the electron - nucleus interation.
+					float A1 = A[w][0] + A[l][0];
+					float A2 = A[w][1] + A[l][1];
+					float A3 = A[w][2] + A[l][2];
+
+					float s1 = s[w][0] + s[l][0];
+					float s2 = s[w][1] + s[l][1];
+					float s3 = s[w][2] + s[l][2];
+
+					// Here we setup the bounds to be appropriate for
+					// the given integrand.
+					initializeBounds(s1, s2, s3, iu);
+
+					// Now we setup a structure suitable for passing to the
+					// integrand.
+					struct IntegrandParameters IP;
+					IP.A1 = A1;
+					IP.A2 = A2;
+					IP.A3 = A3;
+					IP.s1 = s1;
+					IP.s2 = s2;
+					IP.s3 = s3;
+					IP.R  = R[iu];
+
+					integrator.setVoidPointer(&IP);
+					integral = integrator.integrate();
+					sum += integral * coefficient1;
+				}
+			}
+		}
+
+		sum = -sum;
+
+		return coefficient * sum;
 	}
 
 // Helper Functions
@@ -143,19 +203,44 @@ public:
 	// 
 	// tidx = index of gaussian term
 	// ridx = index of nucleus
-	void initializeBounds(int tidx, int ridx) {
-		lowerBounds[0] = fmin(R[ridx][0], -s[tidx][0]) - range;
-	    upperBounds[0] = fmax(R[ridx][0], -s[tidx][0]) + range;
+	void initializeBounds(float s1, float s2, float s3, int ridx) {
+		lowerBounds[0] = fmin(R[ridx][0], -s1) - range;
+	    upperBounds[0] = fmax(R[ridx][0], -s1) + range;
 
-	    lowerBounds[1] = fmin(R[ridx][1], -s[tidx][1]) - range;
-	    upperBounds[1] = fmax(R[ridx][1], -s[tidx][1]) + range;
+	    lowerBounds[1] = fmin(R[ridx][1], -s2) - range;
+	    upperBounds[1] = fmax(R[ridx][1], -s2) + range;
 
-	    lowerBounds[1] = fmin(R[ridx][2], -s[tidx][2]) - range;
-	    upperBounds[1] = fmax(R[ridx][2], -s[tidx][2]) + range;
+	    lowerBounds[1] = fmin(R[ridx][2], -s3) - range;
+	    upperBounds[1] = fmax(R[ridx][2], -s3) + range;
 	}
 
-	static float integrandWrapper(float * input, void * self) {
+	static float integrand(float * input, void * params) {
+		struct IntegrandParameters * IP = (struct IntegrandParameters *)params;
 
+		float x1 = input[0];
+		float x2 = input[1];
+		float x3 = input[2];
+
+		float A1  = IP->A1;
+		float A2  = IP->A2;
+		float A3  = IP->A3;
+		float s1  = IP->s1;
+		float s2  = IP->s2;
+		float s3  = IP->s3;
+		float * R = IP->R;
+
+		float numerator = -(x1*x1)*A1 + x1*s1 - (x2*x2)*A2 + x2*s2  -(x3*x3)*A3 + x3*s3;
+		numerator = expf(numerator);
+
+		float d1 = R[0] - x1;
+		float d2 = R[1] - x2;
+		float d3 = R[2] - x3;
+
+		float denominator = d1*d1 + d2*d2 + d3*d3;
+		denominator = fmax(sqrtf(denominator), 1e-7);
+
+
+		return numerator / denominator;
 	}
 
 };

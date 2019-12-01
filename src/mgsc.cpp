@@ -7,5 +7,7 @@
 using namespace std;
 
 int main(int argc, char ** argv) {
+	// Single Term Testing
+
 	return 0;
 }
