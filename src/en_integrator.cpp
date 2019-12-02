@@ -27,6 +27,7 @@ public:
 	gsl_integration_workspace * wkspace2;
 
 	ElectronNucleiIntegrator(int size) {
+		gsl_set_error_handler(ElectronNucleiIntegrator::handler);
 		wkspace0 = gsl_integration_workspace_alloc(size);
 		wkspace1 = gsl_integration_workspace_alloc(size);
 		wkspace2 = gsl_integration_workspace_alloc(size);
@@ -55,8 +56,6 @@ public:
 			&F0, 0, relerr, size, wkspace0, &result, &error
 		);
 
-		if (err) handleError(err);
-
 		return (float)result;
 	}
 
@@ -78,8 +77,6 @@ private:
 			self->size, self->wkspace1, 
 			&result, &error
 		);
-
-		if (err) handleError(err);
 	}
 
 	static double integral1(double y, void * params) {
@@ -99,8 +96,6 @@ private:
 			self->size, self->wkspace2, 
 			&result, &error
 		);
-
-		if (err) handleError(err);
 	}
 
 	static double integrand(double z, void * params) {
@@ -127,7 +122,7 @@ private:
 
 		float denominator = d1*d1 + d2*d2 + d3*d3;
 		// denominator = fmax(sqrtf(denominator), 1e-7);
-		denominator = fmax(sqrtf(denominator), 1e-7);
+		denominator = sqrtf(denominator);
 
 		return numerator / denominator;
 	}
@@ -140,5 +135,18 @@ private:
 		} else {
 			std::cout << "Unspecified Integration Error" << std::endl;
 		}
+	}
+
+	static void handler(
+		const char * reason,
+		const char * file,
+		int line,
+		int gsl_errno
+	) {
+		// Do nothing.
+		// Some of the individual integrals will appear to 
+		// be divergent accoring to the algorithm. The full integral
+		// in three dimensions is convergent, but the gsl library
+		// can't handle it.
 	}
 };

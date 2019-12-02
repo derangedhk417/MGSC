@@ -7,21 +7,16 @@ using namespace std;
 
 int main(int argc, char ** argv) {
 
-	float test[] = {
-		1e-2, 2e-2, 4e-2,
-		1e-1, 2e-2, 4e-1,
-		1.0,  2.0,  3.0,
-		10.0, 20.0, 30.0,
-		40.0, 50.0, 60.0,
-		70.0, 80.0, 90.0,
-		100.0, 1000.0
-	};
+	// float scales[] = {
+	// 	980.0,  990.0, 995.0, 997.5, 999.0,
+	// 	1001.0, 1002.5, 1005.0, 1010.0, 1020.0 
+	// };
 
-	int n_test = 20;
+	// int n = 10;
 
-	for (int i = 0; i < n_test; ++i) {
+	// for (int i = 0; i < n; ++i) {
 		// Single Term Testing
-		float scale = test[i];
+		float scale = 2000.0;
 		float A1[]  = {1.0 * scale, 1.0 * scale, 1.0 * scale};
 		float ** A  = new float*[1];
 		A[0]        = A1;
@@ -37,7 +32,7 @@ int main(int argc, char ** argv) {
 
 		float Q[] = {N_qe};
 		
-		GaussianWavefunction wavefn(1);
+		GaussianWavefunction wavefn(1, 0.01, 128);
 		wavefn.A  = A;
 		wavefn.s  = s;
 		wavefn.C  = C;
@@ -47,8 +42,9 @@ int main(int argc, char ** argv) {
 
 		float expectation = wavefn.getHamiltonianExpectation();
 
-		cout << scale << " " << expectation << "eV" << endl;
-	}
+		cout << scale << " " << expectation << " eV" << endl;
+	//}
+	
 	
 
 	return 0;

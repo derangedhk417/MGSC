@@ -43,12 +43,18 @@ public:
 	float * lowerBounds;
 	float * upperBounds;
 
-	GaussianWavefunction(int nterms) {
+	double relerr;
+	int    size;
+
+	GaussianWavefunction(int nterms, double relerr, int size) {
 		// In a future version, this will be 3 times and number of electrons.
 		// Right now it is just going to be 3, corresponding to a single 
 		// electron.
 		n = 3;
 		m = nterms;
+
+		this->relerr = relerr;
+		this->size   = size;
 	}
 
 // Math
@@ -210,7 +216,7 @@ public:
 // 					integrator->setVoidPointer(&IP);
 // 					integral = integrator->integrate();
 // 					sum += integral * coefficient1;
-					ElectronNucleiIntegrator integrator(256);
+					ElectronNucleiIntegrator integrator(this->size);
 					integrator.A1 = A1;
 					integrator.A2 = A2;
 					integrator.A3 = A3;
@@ -219,7 +225,7 @@ public:
 					integrator.s3 = s3;
 					integrator.R  = R[iu];
 
-					integral = (float)integrator.Integrate(1e-4);
+					integral = (float)integrator.Integrate(this->relerr);
 					sum += integral * coefficient1;
 
 
