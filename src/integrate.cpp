@@ -4,6 +4,7 @@
 #include <iostream>
 #include <mathimf.h>
 #include <chrono>
+#include <gsl/gsl_integration.h>
 
 // Integrates the specified function over the specified range 
 // of independent variable values using a triangular integral.
@@ -23,8 +24,8 @@ public:
 	float min_step    = 0.05;
 	float max_step    = 0.1;
 	float min_slope   = 0.05; // The slope under which the max_step will be used.
-	float max_slope   = 1.0; // The slope above which the min_step will be used.
-	float finite_step = 1e-7; // The finite step to use for the derivative. 
+	float max_slope   = 1.0;  // The slope above which the min_step will be used.
+	float finite_step = 1e-7;    // The finite step to use for the derivative. 
 
 	void *voidData = NULL;
 

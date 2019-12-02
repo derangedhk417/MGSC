@@ -1,2 +1,2 @@
 #!/bin/bash
-icc mgsc.cpp -o mgsc -O3
+icc -lgsl mgsc.cpp -o mgsc -O3
