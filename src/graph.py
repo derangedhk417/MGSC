@@ -70,9 +70,15 @@ if __name__ == '__main__':
 	plt.xlim(_domain)
 	plt.ylim(_range)
 
+	for tick in ax.xaxis.get_major_ticks():
+		tick.label.set_fontsize(14)
 
-	ax.scatter(scales[::100], exps[::100], s=4)
-	ax.set_xlabel(r"Gaussian Full Width Half Max $[\mathsf{nm}]$")
-	ax.set_ylabel(r"$E_{gs}\;\mathsf{[eV]}$")
-	plt.title("Expectation Value of Energy as a function of Gaussian Full Width Half Max")
+	for tick in ax.yaxis.get_major_ticks():
+		tick.label.set_fontsize(14) 
+
+
+	ax.scatter(scales[::100], exps[::100], s=8)
+	ax.set_xlabel(r"Gaussian Full Width Half Max $[\mathsf{nm}]$", fontsize=16)
+	ax.set_ylabel(r"$E_{gs}\;\mathsf{[eV]}$", fontsize=16)
+	plt.title("Expectation Value of Energy as a function of Gaussian Full Width Half Max", fontsize=18)
 	plt.show()
