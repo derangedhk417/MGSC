@@ -2,8 +2,12 @@ import matplotlib.pyplot as plt
 import numpy             as np
 import sys
 
+import matplotlib as mpl
+
 if __name__ == '__main__':
 	fname = sys.argv[1]
+
+	mpl.rcParams['axes.linewidth'] = 2
 
 	with open(fname, 'r') as file:
 		raw = file.read()
@@ -64,21 +68,22 @@ if __name__ == '__main__':
 
 	ax.set_xticks(major_ticks_x)
 	ax.set_yticks(major_ticks_y)
-	ax.grid(which='both', linestyle=':')
+	ax.grid(which='both', linestyle=':', linewidth=2)
 	ax.grid(which='major', alpha=0.9)
 
 	plt.xlim(_domain)
 	plt.ylim(_range)
 
 	for tick in ax.xaxis.get_major_ticks():
-		tick.label.set_fontsize(14)
+		tick.label.set_fontsize(18)
 
 	for tick in ax.yaxis.get_major_ticks():
-		tick.label.set_fontsize(14) 
+		tick.label.set_fontsize(18) 
 
 
-	ax.scatter(scales[::100], exps[::100], s=8)
-	ax.set_xlabel(r"Gaussian Full Width Half Max $[\mathsf{nm}]$", fontsize=16)
-	ax.set_ylabel(r"$E_{gs}\;\mathsf{[eV]}$", fontsize=16)
-	plt.title("Expectation Value of Energy as a function of Gaussian Full Width Half Max", fontsize=18)
+	
+	ax.scatter(scales[::100], exps[::100], s=16)
+	ax.set_xlabel(r"Gaussian Full Width Half Max $[\mathsf{nm}]$", fontsize=20)
+	ax.set_ylabel(r"$E_{gs}\;\mathsf{[eV]}$", fontsize=20)
+	plt.title("Expectation Value of the Hamiltonian as a function of Gaussian Full Width Half Max", fontsize=24)
 	plt.show()
