@@ -62,7 +62,7 @@ public:
 		const gsl_rng_type *T;
   		gsl_rng *rng;
 
-  		size_t calls = 10000000;
+  		size_t calls = 10000;
 
 		gsl_rng_env_setup();
 
