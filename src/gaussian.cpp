@@ -4,7 +4,9 @@
 #include <mathimf.h>
 #include <chrono>
 #include "constants.h"
-#include "en_integrator.cpp"
+//#include "en_integrator.cpp"
+//#include "en_integrator_alt.cpp"
+#include "en_integrator_monte_carlo.cpp"
 
 #define DEBUG
 #undef  DEBUG
@@ -87,10 +89,11 @@ public:
 
 	// Gets the expectation value of the Hamiltonian under the current
 	// conditions.
-	float getHamiltonianExpectation() {
+	float getHamiltonianExpectation(float *err) {
 		float B = getNormalizationConstant();
 		float T = getKineticExpectation(B);
-		float V = getPotentialExpectation(B);
+		float V = getPotentialExpectation(B, err);
+
 
 #ifdef DEBUG
 
@@ -143,7 +146,7 @@ public:
 	// Given the appropriate normalization constant, returns the
 	// expectation value of the potential energy for the given set 
 	// of parameters.
-	float getPotentialExpectation(float B) {
+	float getPotentialExpectation(float B, float * err) {
 		float coefficient = (N_qe*B*B) / N_fpien;
 
 #ifdef DEBUG
@@ -176,46 +179,6 @@ public:
 					float s2 = s[w][1] + s[l][1];
 					float s3 = s[w][2] + s[l][2];
 
-// 					// Here we setup the bounds to be appropriate for
-// 					// the given integrand.
-// 					initializeBounds(A1, A2, A3, s1, s2, s3, iu);
-
-// 					// Now we setup a structure suitable for passing to the
-// 					// integrand.
-// 					struct IntegrandParameters IP;
-// 					IP.A1 = A1;
-// 					IP.A2 = A2;
-// 					IP.A3 = A3;
-// 					IP.s1 = s1;
-// 					IP.s2 = s2;
-// 					IP.s3 = s3;
-// 					IP.R  = R[iu];
-
-// 					float A_mean  = (A1 + A2 + A3) / 3;
-// 					float A_scale = 1 / sqrtf(A_mean);
-// 					float A_rec   = 1 / A_mean;
-
-// 					// The slope of the function is proportional to A
-// 					// so we need to scale the integration parameters
-// 					// accordingly.
-// 					integrator->min_slope = 0.05 * A_rec;
-// 					integrator->max_slope = 1.0  * A_rec;
-
-// 					// The with is inversely proportional to A, so we
-// 					// need to scale accordingly.
-// 					integrator->min_step = 0.005 * A_scale;
-// 					//integrator->max_step = 0.1  * (1 / ((A1 + A2 + A3) / 3));
-// 					integrator->max_step = fabs(lowerBounds[0] - upperBounds[0]) / 10.0; 
-// #ifdef DEBUG
-// 					std::cout << "min_slope: " << integrator->min_slope << std::endl;
-// 					std::cout << "max_slope: " << integrator->max_slope << std::endl;
-// 					std::cout << "min_step: "  << integrator->min_step << std::endl;
-// 					std::cout << "max_step: "  << integrator->max_step << std::endl;
-// #endif
-
-// 					integrator->setVoidPointer(&IP);
-// 					integral = integrator->integrate();
-// 					sum += integral * coefficient1;
 					ElectronNucleiIntegrator integrator(this->size);
 					integrator.A1 = A1;
 					integrator.A2 = A2;
@@ -225,7 +188,7 @@ public:
 					integrator.s3 = s3;
 					integrator.R  = R[iu];
 
-					integral = (float)integrator.Integrate(this->relerr);
+					integral = (float)integrator.Integrate(this->relerr, err);
 					sum += integral * coefficient1;
 
 
@@ -238,65 +201,5 @@ public:
 
 		return -coefficient * sum;
 	}
-
-// Helper Functions
-public:
-
-// 	// This uses the center location of the given term to set the
-// 	// bounds for the integration intelligently. The terms are 
-// 	// zero indexed, so idx = 0  would correspond to the first
-// 	// term.
-// 	// 
-// 	// tidx = index of gaussian term
-// 	// ridx = index of nucleus
-// 	void initializeBounds(float A1, float A2, float A3, float s1, float s2, float s3, int ridx) {
-// 		float A1_scale = 1 / sqrtf(A1);
-// 		float A2_scale = 1 / sqrtf(A2);
-// 		float A3_scale = 1 / sqrtf(A3);
-
-// 		lowerBounds[0] = fmin(R[ridx][0], -s1) - range*A1_scale;
-// 	    upperBounds[0] = fmax(R[ridx][0], -s1) + range*A1_scale;
-
-// 	    lowerBounds[1] = fmin(R[ridx][1], -s2) - range*A2_scale;
-// 	    upperBounds[1] = fmax(R[ridx][1], -s2) + range*A2_scale;
-
-// 	    lowerBounds[2] = fmin(R[ridx][2], -s3) - range*A3_scale;
-// 	    upperBounds[2] = fmax(R[ridx][2], -s3) + range*A3_scale;
-
-// #ifdef DEBUG
-// 	    std::cout << "x1 -> " << lowerBounds[0] << " - " << upperBounds[0] << std::endl;
-// 	    std::cout << "x2 -> " << lowerBounds[1] << " - " << upperBounds[1] << std::endl;
-// 	    std::cout << "x3 -> " << lowerBounds[2] << " - " << upperBounds[2] << std::endl;
-// #endif
-// 	}
-
-	// static float integrand(float * input, void * params) {
-	// 	struct IntegrandParameters * IP = (struct IntegrandParameters *)params;
-
-	// 	float x1 = input[0];
-	// 	float x2 = input[1];
-	// 	float x3 = input[2];
-
-	// 	float A1  = IP->A1;
-	// 	float A2  = IP->A2;
-	// 	float A3  = IP->A3;
-	// 	float s1  = IP->s1;
-	// 	float s2  = IP->s2;
-	// 	float s3  = IP->s3;
-	// 	float * R = IP->R;
-
-	// 	float numerator = -(x1*x1)*A1 + x1*s1 - (x2*x2)*A2 + x2*s2 - (x3*x3)*A3 + x3*s3;
-	// 	numerator = expf(numerator);
-
-	// 	float d1 = R[0] - x1;
-	// 	float d2 = R[1] - x2;
-	// 	float d3 = R[2] - x3;
-
-	// 	float denominator = d1*d1 + d2*d2 + d3*d3;
-	// 	denominator = fmax(sqrtf(denominator), 1e-7);
-
-
-	// 	return numerator / denominator;
-	// }
 
 };

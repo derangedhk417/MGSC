@@ -7,16 +7,21 @@ using namespace std;
 
 int main(int argc, char ** argv) {
 
-	// float scales[] = {
-	// 	980.0,  990.0, 995.0, 997.5, 999.0,
-	// 	1001.0, 1002.5, 1005.0, 1010.0, 1020.0 
+	// float errors[] = {
+	// 	0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.005, 0.0025
 	// };
 
-	// int n = 10;
+	float scales[] = {
+		1e-10, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3, 1e4, 1e5, 1e10
+	};
 
-	// for (int i = 0; i < n; ++i) {
+	int n = 13;
+
+	cout << "Scale" << " || " << "Time" << " || " << "Error" << " || " << "Value" << endl;
+
+	for (int i = 0; i < n; ++i) {
 		// Single Term Testing
-		float scale = 2000.0;
+		float scale = scales[i];
 		float A1[]  = {1.0 * scale, 1.0 * scale, 1.0 * scale};
 		float ** A  = new float*[1];
 		A[0]        = A1;
@@ -26,13 +31,13 @@ int main(int argc, char ** argv) {
 		s[0]       = s1;
 
 		float C[]  = {1.0};
-		float R1[] = {0.0, 0.0, 0.0};
+		float R1[] = {10.0, 10.0, 10.0};
 		float ** R = new float*[1];
 		R[0]       = R1;
 
 		float Q[] = {N_qe};
 		
-		GaussianWavefunction wavefn(1, 0.01, 128);
+		GaussianWavefunction wavefn(1, 0.01, 256);
 		wavefn.A  = A;
 		wavefn.s  = s;
 		wavefn.C  = C;
@@ -40,10 +45,15 @@ int main(int argc, char ** argv) {
 		wavefn.Nu = 1;
 		wavefn.Q  = Q; 
 
-		float expectation = wavefn.getHamiltonianExpectation();
+		float err;
 
-		cout << scale << " " << expectation << " eV" << endl;
-	//}
+		auto begin        = chrono::high_resolution_clock::now();
+		float expectation = wavefn.getHamiltonianExpectation(&err);
+		auto end          = chrono::high_resolution_clock::now();
+		auto duration     = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+
+		cout << scales[i] << " || " << duration / 1e6 << " ms || " << err << " eV || " << expectation << " eV" << endl;
+	}
 	
 	
 
