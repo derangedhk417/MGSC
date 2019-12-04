@@ -1852,5 +1852,59 @@ V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\\
 
 \end_layout
 
+\begin_layout Section
+Ideas
+\end_layout
+
+\begin_layout Subsection
+Improving the Electron - Electron and Electron - Nucleus Integrals
+\end_layout
+
+\begin_layout Standard
+For integrals in the following form, the following two approaches may significan
+tly improve the speed and accuracy of the integration.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]}{\sqrt{\left(x_{3i}-x_{3j}\right)^{2}+\left(x_{3i+1}-x_{3j+1}\right)^{2}+\left(x_{3i+2}-x_{3j+2}\right)^{2}}}\,dx_{3i}\,dx_{3j}\,dx_{3i+1}\,dx_{3j+1}\,dx_{3i+2}\,dx_{3j+2}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Fourier Transform
+\end_layout
+
+\begin_layout Standard
+Analytically determine (if possible) the integral for sine and cosine wavefuncti
+ons and then write the numerator as a fourier series or fourier transform
+ and sum the analytical integral of the components.
+\end_layout
+
+\begin_layout Subsubsection
+Taylor Seroes
+\end_layout
+
+\begin_layout Standard
+The numerator can be written as a Taylor series of order 
+\begin_inset Formula $x^{2}$
+\end_inset
+
+.
+ This Taylor series very accurately approximates the numerator for about
+ 1/10th of the range where it is significantly larger than zero.
+ With a quadratic in the numerator, the integral becomes possible to complete
+ analytically.
+ Compute the integral by using the indefinite integral with the Taylor series
+ in the numerator and evaluating it for a relatively small number of steps.
+ It may be possible to get good accuracy with 10 - 12 steps per dimension.
+ 
+\end_layout
+
 \end_body
 \end_document
