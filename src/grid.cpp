@@ -130,15 +130,17 @@ void Combined(const gsl_vector * x, void * params, double * f, gsl_vector * grad
 
 
 int main(int argc, char ** argv) {
-	int N_A1 = 30;
-	int N_A2 = 30;
+	int N_A1 = 64;
+	int N_A2 = 64;
 
-	float A1_min = 5e5;
+	float A1_min = 1e5;
 	float A1_max = 1e7;
-	float A2_min = 1e6;
-	float A2_max = 9e7;
+	float A2_min = 1e5;
+	float A2_max = 1e7;
 
 	float best = 1.0;
+
+	cout << "i, j, E, error" << endl;
 
 	for (int i = 0; i < N_A1; ++i) {
 		float A1_inc     = (A1_max - A1_min) / N_A1;
@@ -146,7 +148,7 @@ int main(int argc, char ** argv) {
 
 		for (int j = 0; j < N_A2; ++j) {
 			float A2_inc     = (A2_max - A2_min) / N_A2;
-			float current_A2 = A2_min + i * A2_inc;
+			float current_A2 = A2_max - i * A2_inc;
 
 			size_t iter = 0;
 			int status;
@@ -169,7 +171,7 @@ int main(int argc, char ** argv) {
 			gsl_vector_set(x, 0, current_A1);
 			gsl_vector_set(x, 1, current_A2);
 			gsl_vector_set(x, 2, 1.0);
-			gsl_vector_set(x, 3, 0.2);
+			gsl_vector_set(x, 3, 1.0);
 
 			T = gsl_multimin_fdfminimizer_conjugate_fr;
 			s = gsl_multimin_fdfminimizer_alloc(T, 4);
@@ -189,18 +191,20 @@ int main(int argc, char ** argv) {
 			float err;
 			float exp = ExpecationValueFinal(x, &err);
 
-			printf("--------------------------------------\n");
-			printf("Results: \n");
-			printf("     Ground State Energy = %f eV\n", exp);
-			printf("     Error               = %f eV\n", err);
-			printf("     A1                  = %f\n", gsl_vector_get(s->x, 0));
-			printf("     A2                  = %f\n", gsl_vector_get(s->x, 1));
-			printf("     C1                  = %f\n", gsl_vector_get(s->x, 2));
-			printf("     C2                  = %f\n", gsl_vector_get(s->x, 3));
+			// printf("--------------------------------------\n");
+			// printf("Results: \n");
+			// printf("     Ground State Energy = %f eV\n", exp);
+			// printf("     Error               = %f eV\n", err);
+			// printf("     A1                  = %f\n", gsl_vector_get(s->x, 0));
+			// printf("     A2                  = %f\n", gsl_vector_get(s->x, 1));
+			// printf("     C1                  = %f\n", gsl_vector_get(s->x, 2));
+			// printf("     C2                  = %f\n", gsl_vector_get(s->x, 3));
 
 			if (exp < best) {
 				best = exp;
 			}
+
+			cout << i << ", " << j << ", " << exp << ", " << err << endl;
 
 			gsl_multimin_fdfminimizer_free(s);
 			gsl_vector_free(x);

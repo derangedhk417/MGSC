@@ -22,22 +22,22 @@ public:
 	double y;
 	double z;
 
-	gsl_integration_workspace * wkspace0;
-	gsl_integration_workspace * wkspace1;
-	gsl_integration_workspace * wkspace2;
+	gsl_integration_cquad_workspace * wkspace0;
+	gsl_integration_cquad_workspace * wkspace1;
+	gsl_integration_cquad_workspace * wkspace2;
 
 	ElectronNucleiIntegrator(int size) {
 		gsl_set_error_handler(ElectronNucleiIntegrator::handler);
-		wkspace0 = gsl_integration_workspace_alloc(size);
-		wkspace1 = gsl_integration_workspace_alloc(size);
-		wkspace2 = gsl_integration_workspace_alloc(size);
+		wkspace0 = gsl_integration_cquad_workspace_alloc(size);
+		wkspace1 = gsl_integration_cquad_workspace_alloc(size);
+		wkspace2 = gsl_integration_cquad_workspace_alloc(size);
 		this->size = size;
 	}
 
 	~ElectronNucleiIntegrator() {
-		gsl_integration_workspace_free(wkspace0);
-		gsl_integration_workspace_free(wkspace1);
-		gsl_integration_workspace_free(wkspace2);
+		gsl_integration_cquad_workspace_free(wkspace0);
+		gsl_integration_cquad_workspace_free(wkspace1);
+		gsl_integration_cquad_workspace_free(wkspace2);
 	}
 
 	// Integrates with the given relative error tolerance.
@@ -48,12 +48,13 @@ public:
 
 		double result;
 		double error;
+		size_t    n_eval;
 
 		F0.function = &ElectronNucleiIntegrator::integral0;
 		F0.params   = this;
 
-		gsl_integration_qagi(
-			&F0, 0, relerr, size, wkspace0, &result, &error
+		gsl_integration_cquad(
+			&F0, -3000, 3000, 0, relerr, wkspace0, &result, &error, &n_eval
 		);
 
 		*err = error;
@@ -70,14 +71,14 @@ private:
 
 		double result;
 		double error;
+		size_t    n_eval;
 
 		F1.function = &ElectronNucleiIntegrator::integral1;
 		F1.params   = self;
 
-		int err = gsl_integration_qagi(
-			&F1, 0, self->relerr, 
-			self->size, self->wkspace1, 
-			&result, &error
+		int err = gsl_integration_cquad(
+			&F1, -3000, 3000, 0, self->relerr, self->wkspace1, 
+			&result, &error, &n_eval
 		);
 	}
 
@@ -89,14 +90,14 @@ private:
 
 		double result;
 		double error;
+		size_t    n_eval;
 
 		F2.function = &ElectronNucleiIntegrator::integrand;
 		F2.params   = self;
 
-		int err = gsl_integration_qagi(
-			&F2, 0, self->relerr, 
-			self->size, self->wkspace2, 
-			&result, &error
+		int err = gsl_integration_cquad(
+			&F2, -3000, 3000, 0, self->relerr, self->wkspace2, 
+			&result, &error, &n_eval
 		);
 	}
 
