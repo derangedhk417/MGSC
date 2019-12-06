@@ -1,0 +1,1910 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{braket}
+\usepackage{amsmath}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Ai}{Ai}
+\DeclareMathOperator{\Bi}{Bi}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "Ground State Calculator: Notes"
+\pdf_author "Adam Robinson"
+\pdf_subject "Variational Principle Ground State Calculator Notes"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1cm
+\topmargin 1.5cm
+\rightmargin 1cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Ground State Calculator: Mathematics and Development Notes
+\end_layout
+
+\begin_layout Author
+Adam J.
+ Robinson
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Gaussian Functions
+\end_layout
+
+\begin_layout Standard
+This section covers important properties of Gaussian functions generalized
+ to any number of dimensions in cartesian coordinates.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For the purposes of this program and its documentation, a Gaussian function
+ in 
+\begin_inset Formula $n$
+\end_inset
+
+ dimensions will be defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{G}_{n}\left(\mathbf{x}\right) & \equiv\exp\left[-\mathbf{x}^{T}\mathbf{A}\mathbf{x}+\mathbf{s}^{T}\mathbf{x}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathbf{x} & =\left[\begin{array}{c}
+x_{1}\\
+x_{2}\\
+\vdots\\
+x_{n-1}\\
+x_{n}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+and is a column vector of input coordinates for the Gaussian function.
+ 
+\begin_inset Formula $\mathbf{s}$
+\end_inset
+
+ is a length 
+\begin_inset Formula $n$
+\end_inset
+
+ column vector that defines the shift of the function.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathbf{s} & =\left[\begin{array}{c}
+s_{1}\\
+s_{2}\\
+\vdots\\
+s_{n-1}\\
+s_{n}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ matrix of values that define the shape of the Gaussian function.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathbf{A} & =\left[\begin{array}{ccc}
+A_{11} & \cdots & A_{1n}\\
+\vdots & \ddots & \vdots\\
+A_{n1} & \cdots & A_{nn}
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This matrix is symmetric and positive definite, meaning that
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathbf{z}^{T}\mathbf{A}\mathbf{z} & >0\;\forall\;\sum_{i}\left|z_{i}\right|\;>0,\;z_{i}\in\mathbb{R}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The integral of such a Gaussian function over all space
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{\mathbb{R}^{n}}\mathcal{G}_{n}\left(\mathbf{x}\right)\,d\mathbf{x} & =\sqrt{\cfrac{\pi^{n}}{\det\mathbf{A}}}\exp\left[\frac{1}{4}\mathbf{s}^{T}\mathbf{A}^{-1}\mathbf{s}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula $\mathbf{A}^{-1}$
+\end_inset
+
+ denotes the inverse of the matrix 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+General Equations
+\end_layout
+
+\begin_layout Standard
+This section defines equations that are generally applicable.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For a given normalized wavefunction 
+\begin_inset Formula 
+\begin{align*}
+\psi & =\psi\left(\mathbf{x}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+the expectation value of the Hamiltonian in cartesian coordinates is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle H\right\rangle  & =\int_{\mathbb{R}^{n}}\psi^{*}H\psi\,d\mathbf{x}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For a system of 
+\begin_inset Formula $N_{u}$
+\end_inset
+
+ atomic nuclei approximated as points with 
+\begin_inset Formula $N_{e}$
+\end_inset
+
+ electrons orbiting them and the Born-Oppenheimer approximation applied,
+ the Hamiltonian of the system is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =\cfrac{-\hbar^{2}}{2m_{e}}\left[\sum_{n=1}^{N_{e}}\nabla_{n}^{2}\psi\left(\mathbf{x}\right)\right]+\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{n=1}^{N_{e}}\sum_{m>n}^{N_{e}}\left|\mathbf{r}_{n}-\mathbf{r}_{m}\right|^{-1}-\sum_{n=1}^{N_{u}}\sum_{m=1}^{N_{e}}Q_{n}\left|\mathbf{R}_{n}-\mathbf{r}_{m}\right|^{-1}\right]\psi\left(\mathbf{x}\right)\label{eq:born_oppenheimer_hamiltonian}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where 
+\begin_inset Formula $\nabla_{n}^{2}$
+\end_inset
+
+ denotes the cartesian Laplacian of the wavefunction with respect to the
+ 
+\begin_inset Formula $n$
+\end_inset
+
+th electrons position, 
+\begin_inset Formula $m_{e}$
+\end_inset
+
+ denotes the mass of the electron, 
+\begin_inset Formula $q_{e}$
+\end_inset
+
+ denotes the charge of the electron (positive), 
+\begin_inset Formula $\mathbf{r}_{n}$
+\end_inset
+
+ denotes the position of the 
+\begin_inset Formula $n$
+\end_inset
+
+th electron w.r.t the origin, 
+\begin_inset Formula $\mathbf{R}_{n}$
+\end_inset
+
+ denotes the position of the 
+\begin_inset Formula $n$
+\end_inset
+
+th nucleus w.r.t the origin and 
+\begin_inset Formula $Q_{n}$
+\end_inset
+
+ denotes the charge of the 
+\begin_inset Formula $n$
+\end_inset
+
+th nucleus.
+ Because of the definition of the Laplacian in cartesian coordinates, this
+ expression can be rewritten as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+H & =\cfrac{-\hbar^{2}}{2m_{e}}\left[\sum_{i=1}^{3N_{e}}\cfrac{\partial^{2}}{\partial x_{i}^{2}}\psi\left(\mathbf{x}\right)\right]+\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{n=1}^{N_{e}}\sum_{m>n}^{N_{e}}\left|\mathbf{r}_{n}-\mathbf{r}_{m}\right|^{-1}-\sum_{n=1}^{N_{u}}\sum_{m=1}^{N_{e}}Q_{n}\left|\mathbf{R}_{n}-\mathbf{r}_{m}\right|^{-1}\right]\psi\left(\mathbf{x}\right)\label{eq:born_oppenheimer_hamiltonian-1}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Here, each Laplacian term has been replaced by three, 2nd partial derivative
+ terms.
+ In each term, 
+\begin_inset Formula $x_{n}$
+\end_inset
+
+ denotes the 
+\begin_inset Formula $n$
+\end_inset
+
+th input coordinate of the trial wavefunction.
+\end_layout
+
+\begin_layout Section
+Gaussian Trial Function
+\end_layout
+
+\begin_layout Standard
+The Gaussian Trial function is defined
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & \equiv B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula $m$
+\end_inset
+
+ is the number of Gaussian terms in the trial function, 
+\begin_inset Formula $B$
+\end_inset
+
+ is a normalization constant, 
+\begin_inset Formula $C_{j}$
+\end_inset
+
+ is an arbitrary real constant, 
+\begin_inset Formula $\mathbf{A}^{\left(j\right)}$
+\end_inset
+
+ defines the shape matrix of the 
+\begin_inset Formula $j$
+\end_inset
+
+th term in the trial function and 
+\begin_inset Formula $\mathbf{s}^{\left(j\right)T}$
+\end_inset
+
+ is the transpose of the shift vector of the 
+\begin_inset Formula $j$
+\end_inset
+
+th term in the trial function.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Simplifying the Hamiltonian
+\end_layout
+
+\begin_layout Standard
+In order to simplify the Hamiltonian, for the purposes of computing its
+ expectation value, it is necessary to better define
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)=\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+First, convert the interior of the exponential into a sum
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x} & =-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}
+\end{align*}
+
+\end_inset
+
+Note that since 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is symmetric, the term 
+\begin_inset Formula $A_{kl}$
+\end_inset
+
+ in the inner sum can also be written 
+\begin_inset Formula $A_{lk}$
+\end_inset
+
+.
+ The symmetry of 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ also means that all off diagonal terms in the sum have an identical term
+ in the sum corresponing to their element in 
+\begin_inset Formula $\mathbf{A}^{T}$
+\end_inset
+
+.
+ This means that only one half of the off diagonal terms need to actually
+ be computed.
+ Their value can then be doubled.
+ Re-writing the derivative
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =B\sum_{j=1}^{m}C_{j}\cfrac{\partial^{2}}{\partial x_{i}^{2}}\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\\
+let\;\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right] & =\hat{\mathcal{G}}^{\left(j\right)}\\
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right] & =\cfrac{\partial}{\partial x_{i}}\left\{ \hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\right\} \\
+\cfrac{\partial}{\partial x_{i}}\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right] & =-\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}s_{k}^{\left(j\right)}x_{k}\\
+ & =-\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+s_{i}^{\left(j\right)}\\
+\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right) & =\sum_{k=1}^{n}\left[\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\cfrac{\partial}{\partial x_{i}}x_{k}+x_{k}\cfrac{\partial}{\partial x_{i}}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\\
+\sum_{k=1}^{n}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\cfrac{\partial}{\partial x_{i}}x_{k} & =\sum_{k=1}^{n}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\delta_{ik}\\
+ & =\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}\\
+\sum_{k=1}^{n}x_{k}\cfrac{\partial}{\partial x_{i}}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right) & =\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{l}A_{kl}^{\left(j\right)}\right)\\
+ & =\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}A_{kl}^{\left(j\right)}\delta_{li}\right)\\
+ & =\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Combining all of the sub-terms derived above and applying the second derivative
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial}{\partial x_{i}}\left\{ \hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\right\}  & =\cfrac{\partial}{\partial x_{i}}\left\{ \hat{\mathcal{G}}^{\left(j\right)}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+=\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\cfrac{\partial}{\partial x_{i}}\hat{\mathcal{G}}^{\left(j\right)}+\hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+As derived above,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial}{\partial x_{i}}\hat{\mathcal{G}}^{\left(j\right)} & =\hat{\mathcal{G}}^{\left(j\right)}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Completing the second derivative terms
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\cfrac{\partial}{\partial x_{i}}\hat{\mathcal{G}}^{\left(j\right)} & =\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\hat{\mathcal{G}}^{\left(j\right)}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]\\
+ & =\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}\\
+\hat{\mathcal{G}}^{\left(j\right)}\cfrac{\partial}{\partial x_{i}}\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right] & =\hat{\mathcal{G}}^{\left(j\right)}\left\{ -\sum_{l=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}\cfrac{\partial}{\partial x_{i}}x_{k}A_{ki}^{\left(j\right)}\right\} \\
+ & =\hat{\mathcal{G}}^{\left(j\right)}\left\{ -\sum_{l=1}^{n}A_{il}^{\left(j\right)}\delta_{li}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}\delta_{ki}\right\} \\
+ & =\hat{\mathcal{G}}^{\left(j\right)}\left\{ -A_{ii}^{\left(j\right)}-A_{ii}^{\left(j\right)}\right\} \\
+ & =-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Finally
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\hat{\mathcal{G}}^{\left(j\right)} & =\left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Meaning that
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =B\sum_{j=1}^{m}C_{j}\left\{ \left[-\sum_{l=1}^{n}x_{l}A_{il}^{\left(j\right)}-\sum_{k=1}^{n}x_{k}A_{ki}^{\left(j\right)}+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}\right\} \\
+ & =B\sum_{j=1}^{m}C_{j}\left\{ \left[-\left(\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}+x_{k}A_{ki}^{\left(j\right)}\right)+s_{i}^{\left(j\right)}\right]^{2}\hat{\mathcal{G}}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\hat{\mathcal{G}}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Recalling that 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is symmetric,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\cfrac{\partial^{2}}{\partial x_{i}^{2}}\,\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =B\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{G}}^{\left(j\right)} & =\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying this definition to simplify the Hamiltonian, the kinetic energy
+ portion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+T\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =\cfrac{-\hbar^{2}}{2m_{e}}\left[\sum_{i=1}^{n}B\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \right]\\
+ & =\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+No derivatives need to be calculated for the potential energy portion, so
+ it can be written
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+V\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Simplifying the Expectation Value of the Hamiltonian
+\end_layout
+
+\begin_layout Standard
+The expectation value of the Hamiltonian for this system can be written
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{\mathbb{R}^{q}}\psi^{*}H\psi\,d\mathbf{x} & =\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\psi^{*}H\psi\,dx_{1}\,dx_{2}\cdots\,dx_{q}\\
+\psi^{*}H\psi & =\psi^{*}\left(T\psi+V\psi\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the number of inputs to the trial function.
+ Since the trial function is real, 
+\begin_inset Formula $\psi^{*}=\psi$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\psi^{*}\left(T\psi+V\psi\right) & =\psi T\psi+V\psi^{2}\\
+V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
+\psi T\psi & =\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Breaking up the integral
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{\mathbb{R}^{q}}\psi^{*}H\psi\,d\mathbf{x} & =\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\psi T\psi\,dx_{1}\,dx_{2}\cdots\,dx_{n}+\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}V\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Kinetic Energy Integral
+\end_layout
+
+\begin_layout Standard
+In order to calculate the integral,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\psi T\psi\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+it is necessary to break it up into a product of integrals w.r.t each 
+\begin_inset Formula $dx_{n}$
+\end_inset
+
+ to the furthest extent that it is possible.
+ In order to do this, it is necessary to express the function 
+\begin_inset Formula $\hat{\mathcal{G}}\left(\mathbf{x}\right)$
+\end_inset
+
+ in terms of a product of multiple exponential functions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\hat{\mathcal{G}}^{\left(j\right)} & =\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\nonumber \\
+ & =\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\nonumber \\
+ & =\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\exp\left[\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right]\nonumber \\
+\exp\left[\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\right] & =\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\nonumber \\
+\exp\left[-\sum_{k=1}^{n}x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right] & =\prod_{k=1}^{n}\exp\left[-x_{k}\left(\sum_{l=1}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\nonumber \\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}-x_{k}\left(\sum_{l\neq k}^{n}x_{l}A_{kl}^{\left(j\right)}\right)\right]\nonumber \\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[-\sum_{l\neq k}^{n}x_{k}x_{l}A_{kl}^{\left(j\right)}\right]\nonumber \\
+ & =\prod_{k=1}^{n}\left\{ \exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\left(\prod_{l\neq k}^{n}\exp\left[-x_{k}x_{l}A_{kl}^{\left(j\right)}\right]\right)\right\} \nonumber \\
+\therefore\hat{\mathcal{G}}^{\left(j\right)} & =\left[\prod_{k=1}^{n}\left\{ \exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\left(\prod_{l\neq k}^{n}\exp\left[-x_{k}x_{l}A_{kl}^{\left(j\right)}\right]\right)\right\} \right]\left[\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right]\label{eq:gaussian_term_expanded}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+At this point, it becomes convenient to apply a significant simplification,
+ at the expense of removing some generality from the trial function.
+ Now, assume that 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is a diagonal matrix, more explicitely
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+A_{ij} & =0\;for\;i\neq j
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying this to eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gaussian_term_expanded"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{G}}^{\left(j\right)} & =\left[\prod_{k=1}^{n}\left\{ \exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\left(\cancelto{1}{\prod_{l\neq k}^{n}\exp\left[-x_{k}x_{l}A_{kl}^{\left(j\right)}\right]}\right)\right\} \right]\left[\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right]\\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\prod_{k=1}^{n}\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\\
+ & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]
+\end{align*}
+
+\end_inset
+
+Using this to write the expression 
+\begin_inset Formula $\psi T\psi$
+\end_inset
+
+ as explicitely as possible
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\psi T\psi & =\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2\sum_{k=1}^{n}x_{k}A_{ik}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \\
+ & =\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\cfrac{-B\hbar^{2}}{2m_{e}}\sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\hat{\mathcal{G}}^{\left(j\right)}\left\{ \left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left(\sum_{j^{\prime}=1}^{m}C_{j^{\prime}}\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\times\\
+ & \sum_{i=1}^{n}\sum_{j=1}^{m}C_{j}\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)\left\{ \left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\left(\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)\times\\
+ & \left(\left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, we simplify the two product terms
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left(\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\right)\left(\prod_{k=1}^{n}\exp\left[-x_{k}^{2}A_{kk}^{\left(j\right)}\right]\exp\left[s_{k}^{\left(j\right)}x_{k}\right]\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+ & =\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}\right]\exp\left[-x_{l}^{2}A_{ll}^{\left(j\right)}\right]\exp\left[s_{l}^{\left(j\right)}x_{l}\right]\\
+ & =\prod_{l=1}^{n}\exp\left[-x_{l}^{2}A_{ll}^{\left(j^{\prime}\right)}-x_{l}^{2}A_{ll}^{\left(j\right)}\right]\exp\left[s_{l}^{\left(j^{\prime}\right)}x_{l}+s_{l}^{\left(j\right)}x_{l}\right]\\
+ & =\prod_{l=1}^{n}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+Inserting this into the original expression.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\psi T\psi & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\left(\left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)\prod_{l=1}^{n}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+Expanding the last term in the above expression.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left[s_{i}^{\left(j\right)}-2x_{i}A_{ii}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)} & =\left[s_{i}^{\left(j\right)}\right]^{2}+4x_{i}^{2}\left[A_{ii}^{\left(j\right)}\right]^{2}-4x_{i}A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}-2A_{ii}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This allows for the integral that defines the expectation value of the kinetic
+ energy to be simplified significantly.
+ First, recall that 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+\int\cdots\int\int\prod_{i=1}^{n}f_{i}\left(x_{i}\right)\,dx_{1}dx_{2}\cdots\,dx_{N} & =\prod_{i=1}^{n}\int f_{i}\left(x_{i}\right)\,dx_{i}\label{eq:product_integral_identity}
+\end{align}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Emphasis being on the fact that all functions in the integrand depend on
+ a single variable of integration, never more, never less.
+ Before applying this, we allow the following definitions, in order to be
+ concise.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+let\;f\left(x_{l}\right) & =\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\\
+let\;g\left(x_{i}\right) & =\left[s_{i}^{\left(j\right)}\right]^{2}+4x_{i}^{2}\left[A_{ii}^{\left(j\right)}\right]^{2}-4x_{i}A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}-2A_{ii}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+We now write the expectation value of the kinetic energy
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\int\cdots\int\int\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}g\left(x_{i}\right)\prod_{l=1}^{n}f\left(x_{l}\right)\right\} \,dx_{1}dx_{2}\cdots dx_{n}\\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\int\cdots\int\int g\left(x_{i}\right)\prod_{l=1}^{n}f\left(x_{l}\right)\,dx_{1}dx_{2}\cdots dx_{n}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\int\cdots\int\int g\left(x_{i}\right)f\left(x_{i}\right)\prod_{l\neq i}^{n}f\left(x_{l}\right)\,dx_{1}dx_{2}\cdots dx_{n}\right\} \\
+ & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\int g\left(x_{i}\right)f\left(x_{i}\right)\,dx_{i}\prod_{l\neq i}^{n}\int f\left(x_{l}\right)\,dx_{l}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This now leaves us with only the following two integrals to calculate.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{\infty}f\left(x_{l}\right)\,dx_{l} & =\int_{-\infty}^{\infty}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\,dx_{l}\\
+\int_{-\infty}^{\infty}g\left(x_{i}\right)f\left(x_{i}\right)\,dx_{i} & =\int_{-\infty}^{\infty}\left(\left[s_{i}^{\left(j\right)}\right]^{2}+4x_{i}^{2}\left[A_{ii}^{\left(j\right)}\right]^{2}-4x_{i}A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}-2A_{ii}^{\left(j\right)}\right)\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)+x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The second integral can be split into a sum of three integrals, making the
+ full list of integrals to be computed
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+I_{1} & \equiv\int_{-\infty}^{\infty}\exp\left[-x_{l}^{2}\left(A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\right)\right]\exp\left[x_{l}\left(s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\right)\right]\,dx_{l}\\
+I_{2} & \equiv\left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)\int_{-\infty}^{\infty}\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)\right]\exp\left[x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}\\
+I_{3} & \equiv4\left[A_{ii}^{\left(j\right)}\right]^{2}\int_{-\infty}^{\infty}x_{i}^{2}\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)\right]\exp\left[x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}\\
+I_{4} & \equiv-4A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}\int_{-\infty}^{\infty}x_{i}\exp\left[-x_{i}^{2}\left(A_{ii}^{\left(j^{\prime}\right)}+A_{ii}^{\left(j\right)}\right)\right]\exp\left[x_{i}\left(s_{i}^{\left(j^{\prime}\right)}+s_{i}^{\left(j\right)}\right)\right]\,dx_{i}
+\end{align*}
+
+\end_inset
+
+All of which can be computed analytically.
+ First,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+let\;D_{ljj^{\prime}} & =A_{ll}^{\left(j^{\prime}\right)}+A_{ll}^{\left(j\right)}\\
+let\;F_{ljj^{\prime}} & =s_{l}^{\left(j^{\prime}\right)}+s_{l}^{\left(j\right)}\\
+I_{1} & =\sqrt{\cfrac{\pi}{D_{ljj^{\prime}}}}\exp\left[\cfrac{F_{ljj^{\prime}}^{2}}{4D_{ljj^{\prime}}}\right]\\
+I_{2} & =\left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)\sqrt{\cfrac{\pi}{D_{ijj^{\prime}}}}\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\\
+I_{3} & =\left[A_{ii}^{\left(j\right)}\right]^{2}\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\left(2D_{ijj^{\prime}}+F_{ijj^{\prime}}^{2}\right)\sqrt{\cfrac{\pi}{D_{ijj^{\prime}}^{5}}}\\
+I_{4} & =-4A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]F_{ijj^{\prime}}\sqrt{\cfrac{\pi}{4D_{ijj^{\prime}}^{3}}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+We are now equipped to write a complete, closed form solution to the expectation
+ value of the kinetic energy.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\left(I_{2}+I_{3}+I_{4}\right)\prod_{l\neq i}^{n}I_{1}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The completely expanded form being
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\pi^{\frac{n+1}{2}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\Gamma_{ijj^{\prime}}\prod_{l\neq i}^{n}D_{ljj^{\prime}}^{-1/2}\exp\left[\cfrac{F_{ljj^{\prime}}^{2}}{4D_{ljj^{\prime}}}\right]\right\} \\
+\Gamma_{ijj^{\prime}} & \equiv\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\left\{ \left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)D_{ijj^{\prime}}^{-1/2}+\left[A_{ii}^{\left(j\right)}\right]^{2}\left(2D_{ijj^{\prime}}+F_{ijj^{\prime}}^{2}\right)D_{ijj^{\prime}}^{-5/2}-2A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}F_{ijj^{\prime}}D_{ijj^{\prime}}^{-3/2}\right\} \\
+D_{kjj^{\prime}} & \equiv A_{kk}^{\left(j^{\prime}\right)}+A_{kk}^{\left(j\right)}\\
+F_{kjj^{\prime}} & =s_{k}^{\left(j^{\prime}\right)}+s_{k}^{\left(j\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Potential Energy Integral
+\end_layout
+
+\begin_layout Standard
+The integral that defines the expectation value of the potential energy
+ can be written as follows (in cartesian coordinates).
+ In order to better formulate it, I will rewrite the Hamiltonian in terms
+ of individual coordinates, rather than cartesian vectors in three dimensions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}V\psi^{2}\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The original definition of the potential energy portion of the integrand
+ was
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+V\psi^{2} & =\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|^{-1}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\left|\mathbf{R}_{i}-\mathbf{r}_{j}\right|^{-1}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Now, rewritten
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+V\psi^{2}= & \cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2}\\
+\mathcal{D}_{ij} & =\cfrac{1}{\sqrt{\left(x_{3i}-x_{3j}\right)^{2}+\left(x_{3i+1}-x_{3j+1}\right)^{2}+\left(x_{3i+2}-x_{3j+2}\right)^{2}}}\\
+\mathcal{J}_{ij} & =\cfrac{1}{\sqrt{\left(R_{3i}-x_{3j}\right)^{2}+\left(R_{3i+1}-x_{3j+1}\right)^{2}+\left(R_{3i+2}-x_{3j+2}\right)^{2}}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, we simplify the square of the wavefunction
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right) & \equiv B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\\
+-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x} & =-\sum_{k=1}^{n}x_{k}^{2}A_{kk}^{\left(j\right)}+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}\\
+\left[\mathcal{G}_{n}^{\left(m\right)}\left(\mathbf{x}\right)\right]^{2} & =\left(B\sum_{j=1}^{m}C_{j}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\right)\left(B\sum_{l=1}^{m}C_{l}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(l\right)}\mathbf{x}+\mathbf{s}^{\left(l\right)T}\mathbf{x}\right]\right)\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}\right]\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(l\right)}\mathbf{x}+\mathbf{s}^{\left(l\right)T}\mathbf{x}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[-\mathbf{x}^{T}\mathbf{A}^{\left(j\right)}\mathbf{x}+\mathbf{s}^{\left(j\right)T}\mathbf{x}-\mathbf{x}^{T}\mathbf{A}^{\left(l\right)}\mathbf{x}+\mathbf{s}^{\left(l\right)T}\mathbf{x}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[-\sum_{k=1}^{n}x_{k}^{2}A_{kk}^{\left(j\right)}+\sum_{k=1}^{n}s_{k}^{\left(j\right)}x_{k}-\sum_{k=1}^{n}x_{k}^{2}A_{kk}^{\left(l\right)}+\sum_{k=1}^{n}s_{k}^{\left(l\right)}x_{k}\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[\sum_{k=1}^{n}\left(-x_{k}^{2}A_{kk}^{\left(j\right)}+s_{k}^{\left(j\right)}x_{k}-x_{k}^{2}A_{kk}^{\left(l\right)}+s_{k}^{\left(l\right)}x_{k}\right)\right]\\
+ & =B^{2}\sum_{j=1}^{m}\sum_{l=1}^{m}C_{j}C_{l}\exp\left[\sum_{k=1}^{n}\left\{ -x_{k}^{2}\left(A_{kk}^{\left(j\right)}+A_{kk}^{\left(l\right)}\right)+x_{k}\left(s_{k}^{\left(j\right)}+s_{k}^{\left(l\right)}\right)\right\} \right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+For formatting purposes, I will make the following definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{K}_{lj} & \equiv\sum_{k=1}^{n}\left\{ -x_{k}^{2}\left(A_{kk}^{\left(j\right)}+A_{kk}^{\left(l\right)}\right)+x_{k}\left(s_{k}^{\left(j\right)}+s_{k}^{\left(l\right)}\right)\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The full expression for the expectation value of the potential energy can
+ then be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle  & =\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{q_{e}}{4\pi\epsilon_{0}}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]B^{2}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Performing some basic simplification of this expressions,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle  & =\cfrac{q_{e}B^{2}}{4\pi\epsilon_{0}}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\left[q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\right]\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, it is convenient to split this into two integrals,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle V\right\rangle  & =\cfrac{q_{e}B^{2}}{4\pi\epsilon_{0}}\left(\mathcal{I}_{1}+\mathcal{I}_{2}\right)\\
+\mathcal{I}_{1} & =q_{e}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\mathcal{D}_{ij}\left(\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\right)\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\mathcal{I}_{2} & =-\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\left(\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\right)\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Neither or these integrals can be computed analytically, except for the
+ most trivial values of the shape matrix and shift matrix.
+ In order to to determine their value, numerical methods must be applied.
+ Before developing an approximation for these expressions, they must be
+ simplified further.
+ Before performing any simplifications, I will make the following observation,
+ which will be helpful.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\exp\left[\mathcal{K}_{lw}\right] & =\exp\left[\sum_{k=1}^{n}\left\{ -x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)+x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right\} \right]\nonumber \\
+\exp\left[\mathcal{K}_{lw}\right] & =\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\label{eq:lkjdjgpjsdigjsdg}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+The Electron - Electron Integral
+\end_layout
+
+\begin_layout Standard
+I will refer to 
+\begin_inset Formula $\mathcal{I}_{1}$
+\end_inset
+
+ as the electron - electron integral, because it is used to calculate the
+ potential energy due to electron - electron interactions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{1} & =q_{e}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}\mathcal{D}_{ij}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:lkjdjgpjsdigjsdg"
+
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{1} & =q_{e}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}\mathcal{D}_{ij}C_{w}C_{l}\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Moving the integrals inside of the sums,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{1} & =q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Next, we apply the fact that an integral of a product of independent factors
+ is equivalent to a product of integrals of independent factors.
+ First, I will extract the integral term from the expression above in order
+ to keep the expression on a single line.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1} & \equiv\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k=1}^{n}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+It is important to note that in the above expression, the integrals can
+ be separated into a number of integrals that do not depend on 
+\begin_inset Formula $\mathcal{D}_{ij}$
+\end_inset
+
+ and six integrals that do.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k}\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)\\
+\mathcal{W}_{kwl} & \equiv\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In the expressions above, the set 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ is the set of six input coordinates 
+\begin_inset Formula $\left\{ x_{1},\,x_{2},\,\cdots,\,x_{n}\right\} $
+\end_inset
+
+ that are the same as the input coordinates in 
+\begin_inset Formula $\mathcal{D}_{ij}$
+\end_inset
+
+.
+ All of the integrals in the left term of 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}$
+\end_inset
+
+ can be calculated analytically.
+ The integral in the right term cannot be calculated analytically.
+ The integral in the left term,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{\infty}\mathcal{W}_{kwl}\,dx_{k} & =\int_{-\infty}^{\infty}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]\,dx_{k}\\
+ & =\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The integral 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}$
+\end_inset
+
+ now reads,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1} & =\left(\prod_{k\notin\mathbb{X}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{D}_{ij}\prod_{k\in\mathbb{X}}\mathcal{W}_{kwl}\,d\mathbb{X}_{1}\cdots\,d\mathbb{X}_{n}\right)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+What remains is to simplify the integral on the right and put it in a form
+ that is reasonable to integrate numerically.
+ The full integral can be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]}{\sqrt{\left(x_{3i}-x_{3j}\right)^{2}+\left(x_{3i+1}-x_{3j+1}\right)^{2}+\left(x_{3i+2}-x_{3j+2}\right)^{2}}}\,dx_{3i}\,dx_{3j}\,dx_{3i+1}\,dx_{3j+1}\,dx_{3i+2}\,dx_{3j+2}\\
+\mathbb{X} & =\left\{ x_{3i},\,x_{3j},\,x_{3i+1},\,x_{3j+1},\,x_{3i+2},\,x_{3j+2}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+As states above, this cannot be computed analytically, but it can be re-written
+ in a form that is readily computed numerically.
+ First, we move the integral from six cartesian coordinates to six polar
+ coordinates.
+ In this case, we treat 
+\begin_inset Formula $x_{3i}$
+\end_inset
+
+, 
+\begin_inset Formula $x_{3i+1}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{3i+2}$
+\end_inset
+
+ as the cartesian coordinates corresponding to the first set of polar coordinate
+s and we treet the remaining coordinates as corresponding to the second
+ set of polar coordinates.
+ More explicitely,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+x_{3i} & =r_{1}\sin\theta_{1}\cos\phi_{1}\\
+x_{3i+1} & =r_{1}\sin\theta_{1}\sin\phi_{1}\\
+x_{3i+2} & =r_{1}\cos\theta_{1}\\
+x_{3j} & =r_{2}\sin\theta_{2}\cos\phi_{2}\\
+x_{3j+1} & =r_{2}\sin\theta_{2}\sin\phi_{2}\\
+x_{3j+2} & =r_{2}\cos\theta_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The term 
+\begin_inset Formula $\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right|$
+\end_inset
+
+ in spherical coordinates can be rewritten
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left|\mathbf{r}_{i}-\mathbf{r}_{j}\right| & =\sqrt{r_{1}^{2}+r_{2}^{2}-2r_{1}r_{2}\cos\left(\theta_{1}-\theta_{2}\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The integral 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}^{\left(1\right)}$
+\end_inset
+
+ can now be written
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{\infty}\int_{0}^{\infty}\cfrac{\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]}{\sqrt{r_{1}^{2}+r_{2}^{2}-2r_{1}r_{2}\cos\left(\theta_{1}-\theta_{2}\right)}}r_{1}^{2}r_{2}^{2}\sin\theta_{1}\sin\theta_{2}\,dr_{1}\,dr_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The numerator term must still be re-written in order to complete the explicit
+ definition of the integral.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right] & \equiv\mathcal{P}_{1}\mathcal{P}_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathcal{P}_{1} & \equiv\exp\left[-x_{3i}^{2}Y_{w\left(3i\right)l}+x_{3i}V_{w\left(3i\right)l}-x_{3i+1}^{2}Y_{w\left(3i+1\right)l}+x_{3i+1}V_{w\left(3i+1\right)l}-x_{3i+2}^{2}Y_{w\left(3i+2\right)l}+x_{3i+2}V_{w\left(3i+2\right)l}\right]\\
+ & =\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{wUl}+\cos\phi_{1}V_{wUl}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{wVl}+\sin\phi_{1}V_{wVl}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{wQl}+V_{wQl}\right]\right\} \right]\\
+U & \equiv3i\\
+V & \equiv3i+1\\
+Q & \equiv3i+2\\
+\mathcal{P}_{2} & \equiv\exp\left[-x_{3j}^{2}Y_{w\left(3j\right)l}+x_{3j}V_{w\left(3j\right)l}-x_{3j+1}^{2}Y_{w\left(3j+1\right)l}+x_{3j+1}V_{w\left(3j+1\right)l}-x_{3j+2}^{2}Y_{w\left(3j+2\right)l}+x_{3j+2}V_{w\left(3j+2\right)l}\right]\\
+ & =\exp\left[r_{2}\left\{ \sin\theta_{2}\left[-r_{2}\sin\theta_{2}\cos^{2}\phi_{2}Y_{w\mathcal{U}l}+\cos\phi_{2}V_{w\mathcal{U}l}-r_{2}\sin\theta_{2}\sin^{2}\phi_{2}Y_{w\mathcal{V}l}+\sin\phi_{2}V_{w\mathcal{V}l}\right]-\cos\theta_{2}\left[r_{2}\cos\theta_{2}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The substitutions made for the indices above are meant to keep each expression
+ on a single line.
+ We can now write 
+\begin_inset Formula $\hat{\mathcal{I}}_{1}^{\left(1\right)}$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{\infty}\int_{0}^{\infty}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}r_{1}^{2}r_{2}^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{r_{1}^{2}+r_{2}^{2}-2r_{1}r_{2}\cos\left(\theta_{1}-\theta_{2}\right)}}\,dr_{1}\,dr_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In order to make this integral more manageable numerically, it is helpful
+ to define a subsitution that brings the range of the integrals down to
+ a finite number.
+ For this purpose, I will make the following subsitutions,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+u_{1} & =\cfrac{1}{1+r_{1}}\\
+u_{2} & =\cfrac{1}{1+r_{2}}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+These substitutions will bring the range of the integral from 
+\begin_inset Formula $\left[0,\,\infty\right)$
+\end_inset
+
+ to 
+\begin_inset Formula $\left[1,\,0\right]$
+\end_inset
+
+, making them much more maneageable for a numerical integration method.
+ They will however, introduce poles to the resulting integrand, which will
+ need to be managed carefully.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+du_{1} & =-\cfrac{1}{\left(1+r_{1}\right)^{2}}dr_{1}\\
+dr_{1} & =-\left(1+r_{1}\right)^{2}\,du_{1}\\
+r_{1} & =\cfrac{1}{u_{1}}-1\\
+dr_{1} & =-\cfrac{1}{u_{1}^{2}}\,du_{1}\\
+du_{2} & =-\cfrac{1}{\left(1+r_{2}\right)^{2}}dr_{2}\\
+dr_{2} & =-\left(1+r_{2}\right)^{2}\,du_{2}\\
+r_{2} & =\cfrac{1}{u_{2}}-1\\
+dr_{2} & =-\cfrac{1}{u_{2}^{2}}\,du_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Subsituting these into the integral and omitting an explicit redefinition
+ of 
+\begin_inset Formula $\mathcal{P}_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{P}_{2}$
+\end_inset
+
+ (because they are trivial),
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{1}^{0}\int_{1}^{0}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}\left(\cfrac{1}{u_{1}}-1\right)^{2}\left(\cfrac{1}{u_{2}}-1\right)^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+\left(\cfrac{1}{u_{2}}-1\right)^{2}-2\left(\cfrac{1}{u_{1}}-1\right)\left(\cfrac{1}{u_{2}}-1\right)\cos\left(\theta_{1}-\theta_{2}\right)}}\cfrac{1}{u_{1}^{2}u_{2}^{2}}\,du_{1}\,du_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This expression is now significantly easier to integrate numerically.
+ It does have a few poles, which must be treated carefully.
+ The poles are at the following points,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+u_{1} & =0\\
+u_{2} & =0\\
+u_{1}=u_{2} & =1
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In order to mitigate the effects of these poles, it is necessary to adopt
+ an integration technique that increases the resolution of its step with
+ proportion to the change in the integrand.
+ More specifically,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Delta u_{1} & \propto\cfrac{\partial}{\partial u_{1}}\;\mathsf{Integrand}\\
+\Delta u_{2} & \propto\cfrac{\partial}{\partial u_{2}}\;\mathsf{Integrand}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The exact method applied for this integration will be discussed in detail
+ later.
+ The full expression for the electron - electron integral can now be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{1} & =q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\left(\prod_{k\notin\mathbb{X}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{1}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{1}\int_{0}^{1}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}\left(\cfrac{1}{u_{1}}-1\right)^{2}\left(\cfrac{1}{u_{2}}-1\right)^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+\left(\cfrac{1}{u_{2}}-1\right)^{2}-2\left(\cfrac{1}{u_{1}}-1\right)\left(\cfrac{1}{u_{2}}-1\right)\cos\left(\theta_{1}-\theta_{2}\right)}}\cfrac{1}{u_{1}^{2}u_{2}^{2}}\,du_{1}\,du_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}\\
+\mathcal{P}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{wUl}+\cos\phi_{1}V_{wUl}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{wVl}+\sin\phi_{1}V_{wVl}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{wQl}+V_{wQl}\right]\right\} \right]\\
+\mathcal{P}_{2} & \equiv\exp\left[r_{2}\left\{ \sin\theta_{2}\left[-r_{2}\sin\theta_{2}\cos^{2}\phi_{2}Y_{w\mathcal{U}l}+\cos\phi_{2}V_{w\mathcal{U}l}-r_{2}\sin\theta_{2}\sin^{2}\phi_{2}Y_{w\mathcal{V}l}+\sin\phi_{2}V_{w\mathcal{V}l}\right]-\cos\theta_{2}\left[r_{2}\cos\theta_{2}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+r_{1} & \equiv\cfrac{1}{u_{1}}-1\\
+r_{2} & \equiv\cfrac{1}{u_{2}}-1\\
+U & \equiv3i\\
+V & \equiv3i+1\\
+Q & \equiv3i+2\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+It's worth noting that I flipped the range on two of the integrals, but
+ this is allowed because both of the negative signs will cancel eachother.
+\end_layout
+
+\begin_layout Subsubsection
+The Electron - Nucleus Integral
+\end_layout
+
+\begin_layout Standard
+I will refer to 
+\begin_inset Formula $\mathcal{I}_{2}$
+\end_inset
+
+ as the electron - nucleus integral, because it is used to calculate the
+ potential energy due to electron - nucleus interactions.
+ I will omit many steps in this derivation, because it is a more simple
+ case of the electron - electron integral.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{2} & =-\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}Q_{i}\mathcal{J}_{ij}\left(\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\exp\left[\mathcal{K}_{lw}\right]\right)\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+ & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{J}_{ij}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\hat{\mathcal{I}}_{2} & \equiv\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{J}_{ij}\exp\left[\mathcal{K}_{lw}\right]\,dx_{1}\,dx_{2}\cdots\,dx_{n}\\
+\mathcal{I}_{2} & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\hat{\mathcal{I}}_{2}\\
+\hat{\mathcal{I}}_{2} & =\left(\prod_{k\notin\mathbb{Y}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\left(\int_{-\infty}^{\infty}\cdots\int_{-\infty}^{\infty}\mathcal{J}_{ij}\prod_{k\in\mathbb{Y}}\mathcal{W}_{kwl}\,d\mathbb{Y}_{1}\cdots\,d\mathbb{Y}_{n}\right)\\
+\mathbb{Y} & =\left\{ x_{3j},\,x_{3j+1},\,x_{3j+2}\right\} \\
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & =\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\mathcal{J}_{ij}\prod_{k\in\mathbb{Y}}\mathcal{W}_{kwl}dx_{3j}\,dx_{3j+1}\,dx_{3j+2}\\
+ & =\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\infty}\cfrac{\mathcal{R}_{1}r_{1}^{2}\sin\theta_{1}}{\sqrt{r_{1}^{2}+R_{i}^{2}-2r_{1}R_{i}\cos\theta_{1}}}\,dr_{1}\,d\theta_{1}\,d\phi_{1}\\
+\mathcal{R}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{w\mathcal{U}l}+\cos\phi_{1}V_{w\mathcal{U}l}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{w\mathcal{V}l}+\sin\phi_{1}V_{w\mathcal{V}l}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Applying the same subsitution as with the electron - electron integral,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & =\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{1}\cfrac{\mathcal{R}_{1}\left(\cfrac{1}{u_{1}}-1\right)^{2}\sin\theta_{1}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+R_{i}^{2}-2\left(\cfrac{1}{u_{1}}-1\right)R_{i}\cos\theta_{1}}}\cfrac{1}{u_{1}^{2}}\,du_{1}\,d\theta_{1}\,d\phi_{1}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The final explicit defnition of the electron - nucleus integral can nnow
+ be written,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{I}_{2} & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\left(\prod_{k\notin\mathbb{Y}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{2}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{1}\cfrac{\mathcal{R}_{1}\left(\cfrac{1}{u_{1}}-1\right)^{2}\sin\theta_{1}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+R_{i}^{2}-2\left(\cfrac{1}{u_{1}}-1\right)R_{i}\cos\theta_{1}}}\cfrac{1}{u_{1}^{2}}\,du_{1}\,d\theta_{1}\,d\phi_{1}\\
+\mathcal{R}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{w\mathcal{U}l}+\cos\phi_{1}V_{w\mathcal{U}l}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{w\mathcal{V}l}+\sin\phi_{1}V_{w\mathcal{V}l}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+r_{1} & \equiv\cfrac{1}{u_{1}}-1\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Expectation Value of the Hamiltonian
+\end_layout
+
+\begin_layout Standard
+The full expectation value of the Hamiltonian, in a form that is ready to
+ be evaluated numerically in a computer, is written below, in as explicit
+ a manner as possible.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left\langle H\right\rangle  & =\left\langle T\right\rangle +\left\langle V\right\rangle \\
+\\
+\left\langle T\right\rangle  & =\cfrac{-B^{2}\hbar^{2}}{2m_{e}}\pi^{\frac{n+1}{2}}\left\{ \sum_{j^{\prime}=1}^{m}\sum_{j=1}^{m}\sum_{i=1}^{n}C_{j^{\prime}}C_{j}\Gamma_{ijj^{\prime}}\prod_{l\neq i}^{n}D_{ljj^{\prime}}^{-1/2}\exp\left[\cfrac{F_{ljj^{\prime}}^{2}}{4D_{ljj^{\prime}}}\right]\right\} \\
+\Gamma_{ijj^{\prime}} & \equiv\exp\left[\cfrac{F_{ijj^{\prime}}^{2}}{4D_{ijj^{\prime}}}\right]\left\{ \left(\left[s_{i}^{\left(j\right)}\right]^{2}-2A_{ii}^{\left(j\right)}\right)D_{ijj^{\prime}}^{-1/2}+\left[A_{ii}^{\left(j\right)}\right]^{2}\left(2D_{ijj^{\prime}}+F_{ijj^{\prime}}^{2}\right)D_{ijj^{\prime}}^{-5/2}-2A_{ii}^{\left(j\right)}s_{i}^{\left(j\right)}F_{ijj^{\prime}}D_{ijj^{\prime}}^{-3/2}\right\} \\
+D_{kjj^{\prime}} & \equiv A_{kk}^{\left(j^{\prime}\right)}+A_{kk}^{\left(j\right)}\\
+F_{kjj^{\prime}} & =s_{k}^{\left(j^{\prime}\right)}+s_{k}^{\left(j\right)}\\
+\\
+\left\langle V\right\rangle  & =\cfrac{q_{e}B^{2}}{4\pi\epsilon_{0}}\left(\mathcal{I}_{1}+\mathcal{I}_{2}\right)\\
+\mathcal{I}_{1} & =q_{e}\sum_{i=1}^{N_{e}}\sum_{j>i}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}C_{w}C_{l}\left(\prod_{k\notin\mathbb{X}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{1}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{\pi}\int_{0}^{1}\int_{0}^{1}\cfrac{\mathcal{P}_{1}\mathcal{P}_{2}\left(\cfrac{1}{u_{1}}-1\right)^{2}\left(\cfrac{1}{u_{2}}-1\right)^{2}\sin\theta_{1}\sin\theta_{2}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+\left(\cfrac{1}{u_{2}}-1\right)^{2}-2\left(\cfrac{1}{u_{1}}-1\right)\left(\cfrac{1}{u_{2}}-1\right)\cos\left(\theta_{1}-\theta_{2}\right)}}\cfrac{1}{u_{1}^{2}u_{2}^{2}}\,du_{1}\,du_{2}\,d\theta_{1}\,d\theta_{2}\,d\phi_{1}\,d\phi_{2}\\
+\mathcal{I}_{2} & =-\sum_{i=1}^{N_{u}}\sum_{j=1}^{N_{e}}\sum_{w=1}^{m}\sum_{l=1}^{m}Q_{i}C_{w}C_{l}\left(\prod_{k\notin\mathbb{Y}}\sqrt{\cfrac{\pi}{Y_{wkl}}}\exp\left[\cfrac{V_{wkl}^{2}}{4Y_{wkl}}\right]\right)\hat{\mathcal{I}}_{2}^{\left(1\right)}\\
+\hat{\mathcal{I}}_{2}^{\left(1\right)} & \equiv\int_{0}^{2\pi}\int_{0}^{\pi}\int_{0}^{1}\cfrac{\mathcal{R}_{1}\left(\cfrac{1}{u_{1}}-1\right)^{2}\sin\theta_{1}}{\sqrt{\left(\cfrac{1}{u_{1}}-1\right)^{2}+R_{i}^{2}-2\left(\cfrac{1}{u_{1}}-1\right)R_{i}\cos\theta_{1}}}\cfrac{1}{u_{1}^{2}}\,du_{1}\,d\theta_{1}\,d\phi_{1}\\
+\mathcal{R}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{w\mathcal{U}l}+\cos\phi_{1}V_{w\mathcal{U}l}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{w\mathcal{V}l}+\sin\phi_{1}V_{w\mathcal{V}l}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+\mathcal{P}_{1} & \equiv\exp\left[r_{1}\left\{ \sin\theta_{1}\left[-r_{1}\sin\theta_{1}\cos^{2}\phi_{1}Y_{wUl}+\cos\phi_{1}V_{wUl}-r_{1}\sin\theta_{1}\sin^{2}\phi_{1}Y_{wVl}+\sin\phi_{1}V_{wVl}\right]-\cos\theta_{1}\left[r_{1}\cos\theta_{1}Y_{wQl}+V_{wQl}\right]\right\} \right]\\
+\mathcal{P}_{2} & \equiv\exp\left[r_{2}\left\{ \sin\theta_{2}\left[-r_{2}\sin\theta_{2}\cos^{2}\phi_{2}Y_{w\mathcal{U}l}+\cos\phi_{2}V_{w\mathcal{U}l}-r_{2}\sin\theta_{2}\sin^{2}\phi_{2}Y_{w\mathcal{V}l}+\sin\phi_{2}V_{w\mathcal{V}l}\right]-\cos\theta_{2}\left[r_{2}\cos\theta_{2}Y_{w\mathcal{Q}l}+V_{w\mathcal{Q}l}\right]\right\} \right]\\
+r_{1} & \equiv\cfrac{1}{u_{1}}-1\\
+r_{2} & \equiv\cfrac{1}{u_{2}}-1\\
+U & \equiv3i\\
+V & \equiv3i+1\\
+Q & \equiv3i+2\\
+\mathcal{U} & \equiv3j\\
+\mathcal{V} & \equiv3j+1\\
+\mathcal{Q} & \equiv3j+2\\
+Y_{wkl} & \equiv A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\\
+V_{wkl} & \equiv s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\\
+\mathbb{X} & =\left\{ x_{3i},\,x_{3j},\,x_{3i+1},\,x_{3j+1},\,x_{3i+2},\,x_{3j+2}\right\} \\
+\mathbb{Y} & =\left\{ x_{3j},\,x_{3j+1},\,x_{3j+2}\right\} 
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Ideas
+\end_layout
+
+\begin_layout Subsection
+Improving the Electron - Electron and Electron - Nucleus Integrals
+\end_layout
+
+\begin_layout Standard
+For integrals in the following form, the following two approaches may significan
+tly improve the speed and accuracy of the integration.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{\mathcal{I}}_{1}^{\left(1\right)} & \equiv\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}\cfrac{\prod_{k\in\mathbb{X}}\exp\left[-x_{k}^{2}\left(A_{kk}^{\left(w\right)}+A_{kk}^{\left(l\right)}\right)\right]\exp\left[x_{k}\left(s_{k}^{\left(w\right)}+s_{k}^{\left(l\right)}\right)\right]}{\sqrt{\left(x_{3i}-x_{3j}\right)^{2}+\left(x_{3i+1}-x_{3j+1}\right)^{2}+\left(x_{3i+2}-x_{3j+2}\right)^{2}}}\,dx_{3i}\,dx_{3j}\,dx_{3i+1}\,dx_{3j+1}\,dx_{3i+2}\,dx_{3j+2}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Fourier Transform
+\end_layout
+
+\begin_layout Standard
+Analytically determine (if possible) the integral for sine and cosine wavefuncti
+ons and then write the numerator as a fourier series or fourier transform
+ and sum the analytical integral of the components.
+\end_layout
+
+\begin_layout Subsubsection
+Taylor Seroes
+\end_layout
+
+\begin_layout Standard
+The numerator can be written as a Taylor series of order 
+\begin_inset Formula $x^{2}$
+\end_inset
+
+.
+ This Taylor series very accurately approximates the numerator for about
+ 1/10th of the range where it is significantly larger than zero.
+ With a quadratic in the numerator, the integral becomes possible to complete
+ analytically.
+ Compute the integral by using the indefinite integral with the Taylor series
+ in the numerator and evaluating it for a relatively small number of steps.
+ It may be possible to get good accuracy with 10 - 12 steps per dimension.
+ 
+\end_layout
+
+\end_body
+\end_document

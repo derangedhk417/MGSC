@@ -323,9 +323,9 @@ ly defining all expressions.
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align*}
-\tilde{I}_{EN} & \equiv\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}P\left(x_{1},\;x_{2},\;x_{3},\;d_{1},\;d_{2},\;d_{3}\right)\,dx_{1}\,dx_{2}\,dx_{3}
-\end{align*}
+\begin{align}
+\tilde{I}_{EN} & \equiv\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}P\left(x_{1},\;x_{2},\;x_{3},\;d_{1},\;d_{2},\;d_{3}\right)\,dx_{1}\,dx_{2}\,dx_{3}\label{eq:I_EN}
+\end{align}
 
 \end_inset
 
@@ -405,8 +405,9 @@ Here, the factor that is multiplied by
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\int_{-\infty}^{+\infty}P\left(x_{1},\;x_{2},\;x_{3},\;d_{1},\;d_{2},\;d_{3}\right)\,dx_{1} & \approx\sum_{n_{1}=0}^{N_{1}-1}\left.\cfrac{d^{-1}P_{1}}{dx_{1}^{-1}}\right|_{\left(\delta_{n_{1}}+\Delta x_{1},\;\delta_{n_{1}}\right)}-\left.\cfrac{d^{-1}P_{1}}{dx_{1}^{-1}}\right|_{\left(\delta_{n_{1}}-\Delta x_{1},\;\delta_{n_{1}}\right)}\\
+\int_{-\infty}^{+\infty}P\left(x_{1},\;x_{2},\;x_{3},\;d_{1},\;d_{2},\;d_{3}\right)\,dx_{1} & \approx\sum_{n_{1}=0}^{N_{1}-1}P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}+\Delta x_{1},\;\delta_{n_{1}}\right)-P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}-\Delta x_{1},\;\delta_{n_{1}}\right)\\
 P_{1}\left(a,\,b\right) & \equiv P\left(a,\;x_{2},\;x_{3},\;b,\;d_{2},\;d_{3}\right)\\
+P_{1}^{\left(-1\right)}\left(a,\,b\right) & \equiv\left.\cfrac{d^{-1}P_{1}}{dx_{1}^{-1}}\right|_{\left(a,\,b\right)}\\
 \Delta x_{1} & \equiv\cfrac{U_{1}-L_{1}}{N_{1}}\\
 \delta_{n_{1}} & \equiv L_{1}+\cfrac{\Delta x_{1}}{2}+n_{1}\Delta x_{1}
 \end{align*}
@@ -459,7 +460,52 @@ reference "eq:N_i"
 \end_inset
 
  could be interpreted as meaning that three intervals are added for every
- one width that the center of the Gaussian is away from the pole.
+ one full width half max that the center of the Gaussian is away from the
+ pole.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The integral from eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:I_EN"
+
+\end_inset
+
+ now reads,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\tilde{I}_{EN} & \approx\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\sum_{n_{1}=0}^{N_{1}-1}\sum_{n_{1}=0}^{N_{1}-1}P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}+\Delta x_{1},\;\delta_{n_{1}}\right)-P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}-\Delta x_{1},\;\delta_{n_{1}}\right)\,dx_{2}\,dx_{3}\\
+ & =\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\sum_{n_{1}=0}^{N_{1}-1}P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}+\Delta x_{1},\;\delta_{n_{1}}\right)\,dx_{2}\,dx_{3}-\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}\sum_{n_{1}=0}^{N_{1}-1}P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}-\Delta x_{1},\;\delta_{n_{1}}\right)\,dx_{2}\,dx_{3}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The same procedure applied for the inner integral can be applied to the
+ next integral.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\int_{-\infty}^{+\infty}\sum_{n_{1}=0}^{N_{1}-1}P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}-\Delta x_{1},\;\delta_{n_{1}}\right)\,dx_{2} & =\sum_{n_{1}=0}^{N_{1}-1}\int_{-\infty}^{+\infty}P_{1}^{\left(-1\right)}\left(\delta_{n_{1}}-\Delta x_{1},\;\delta_{n_{1}}\right)\,dx_{2}
+\end{align*}
+
+\end_inset
+
+
 \end_layout
 
 \end_body
