@@ -30,7 +30,7 @@ public:
 	double  * Q;  // List of nuclear charges
 
 
-	ENIntegrator integrator;
+	ENIntegrator * integrator;
 
 	// Initializes a Gaussian trial wavefunction with a given number of 
 	// Gaussian terms. The variables annotated above need to be given a value
@@ -159,7 +159,7 @@ public:
 
 					integrator
 
-					integral = integrator.integrate(iu, w, l);
+					integral = integrator->integrate(iu, w, l);
 					sum += integral * coefficient1;
 				}
 			}
