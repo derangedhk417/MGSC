@@ -14,14 +14,17 @@
 // reference.
 class GaussianWFN;
 
+#ifndef INTEGRAL_EN
+#define INTEGRAL_EN
+
 class ENIntegrator {
 
 public:
 
 	gsl_monte_vegas_state * state;
 
-	double lowerBounds[3];
-	double upperBounds[3];
+	double * lowerBounds;
+	double * upperBounds;
 	GaussianWFN * wavefn;
 
 	int    maxCalls;
@@ -70,3 +73,5 @@ private:
 	static double integrand(double * x, size_t dim, void * params);
 
 };
+
+#endif

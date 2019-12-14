@@ -4,6 +4,13 @@
 
 #include "integral_en.h"
 
+
+const double width  = 6.0;
+const int    ncalls = 25000;
+
+#ifndef GAUSSIAN
+#define GAUSSIAN
+
 // Stores all variables related to a Gaussian trial wavefunction and
 // provides methods for calculating expectation values.
 class GaussianWFN {
@@ -20,7 +27,7 @@ public:
 	double  * Q;  // List of nuclear charges
 
 
-	ENIntegrator integrator;
+	ENIntegrator * integrator;
 
 	// Initializes a Gaussian trial wavefunction with a given number of 
 	// Gaussian terms. The variables annotated above need to be given a value
@@ -54,3 +61,5 @@ public:
 	// of parameters.
 	double getPotentialExpectation(double B);
 };
+
+#endif

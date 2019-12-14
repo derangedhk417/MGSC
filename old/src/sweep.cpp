@@ -10,7 +10,7 @@ int main(int argc, char ** argv) {
 
 	float min = 1.0;
 	float max = 1e7;
-	int   N   = 20000;
+	int   N   = 10;
 
 	float increment = (max - min) / N;
 
