@@ -6,7 +6,7 @@
 
 
 const double width  = 6.0;
-const int    ncalls = 25000;
+const int    ncalls = 5000;
 
 #ifndef GAUSSIAN
 #define GAUSSIAN
@@ -43,7 +43,7 @@ public:
 
 	// Gets the expectation value of the Hamiltonian based on the
 	// current set of parameters defining the wavefunction.
-	double getHamiltonianExpectation();
+	double getHamiltonianExpectation(double * error);
 
 	// This calculates the value denoted 'B' in the documentation. 
 	// The value is calculated such that |B|^2 multiplied by the 
@@ -59,7 +59,7 @@ public:
 	// Given the appropriate normalization constant, returns the
 	// expectation value of the potential energy for the given set 
 	// of parameters.
-	double getPotentialExpectation(double B);
+	double getPotentialExpectation(double B, double * error);
 };
 
 #endif

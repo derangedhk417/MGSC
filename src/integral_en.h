@@ -66,7 +66,7 @@ public:
 	// center and gaussian width.
 	void setBounds(int iu, int w, int l);
 
-	double Integrate(int iu, int w, int l);
+	double Integrate(int iu, int w, int l, double * error);
 
 private:
 

@@ -10,11 +10,11 @@ int main() {
 
 	double min = 1.0;
 	double max = 1e7;
-	int   N    = 10;
+	int   N    = 512;
 
 	double increment = (max - min) / N;
 
-	cout << "Scale, Expectation" << endl;	
+	cout << "Scale, Error, Expectation" << endl;	
 
 	for (int i = 0; i < N; ++i) {
 		// Single Term Testing
@@ -42,9 +42,10 @@ int main() {
 		wavefn.Nu = 1;
 		wavefn.Q  = Q; 
 		
-		double expectation = wavefn.getHamiltonianExpectation();
+		double error;
+		double expectation = wavefn.getHamiltonianExpectation(&error);
 	
-		cout << scale << ", " << expectation << endl;
+		cout << scale << ", " << error << ", " << expectation << endl;
 	}
 	
 	return 0;

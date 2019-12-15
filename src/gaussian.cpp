@@ -12,8 +12,6 @@
 #include "integral_en.h"
 #include "gaussian.h"
 
-
-
 // Initializes a Gaussian trial wavefunction with a given number of 
 // Gaussian terms. The variables annotated above need to be given a value
 // before the wavefunction is actually useable.
@@ -35,10 +33,12 @@ GaussianWFN::~GaussianWFN() {
 
 // Gets the expectation value of the Hamiltonian based on the
 // current set of parameters defining the wavefunction.
-double GaussianWFN::getHamiltonianExpectation() {
+double GaussianWFN::getHamiltonianExpectation(double * error) {
+	*error = 0.0;
+
 	double B = getNormalizationConstant();
 	double T = getKineticExpectation(B);
-	double V = getPotentialExpectation(B);
+	double V = getPotentialExpectation(B, error);
 
 	return T + V;
 }
@@ -121,7 +121,7 @@ double GaussianWFN::getKineticExpectation(double B) {
 // Given the appropriate normalization constant, returns the
 // expectation value of the potential energy for the given set 
 // of parameters.
-double GaussianWFN::getPotentialExpectation(double B) {
+double GaussianWFN::getPotentialExpectation(double B, double * error) {
 	double coefficient = (N_qe*B*B) / N_fpien;
 
 	double sum = 0.0;
@@ -135,12 +135,17 @@ double GaussianWFN::getPotentialExpectation(double B) {
 			for (int l = 0; l < m; ++l) {
 				double coefficient1 = Q[iu] * C[w] * C[l];
 				double integral     = 0.0;
+				double integral_err = 0.0;
 
-				integral = integrator->Integrate(iu, w, l);
-				sum += integral * coefficient1;
+				integral = integrator->Integrate(iu, w, l, &integral_err);
+				sum    += integral * coefficient1;
+				*error += fabs(integral_err * coefficient1);
 			}
 		}
 	}
 
+
+	*error *= coefficient;
+	*error  = fabs(*error);
 	return -coefficient * sum;
 }

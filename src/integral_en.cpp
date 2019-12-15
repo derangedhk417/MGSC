@@ -94,11 +94,10 @@ void ENIntegrator::setBounds(int iu, int w, int l) {
 
 }
 
-double ENIntegrator::Integrate(int iu, int w, int l) {
+double ENIntegrator::Integrate(int iu, int w, int l, double * error) {
 	setBounds(iu, w, l);
 
 	double result;
-	double error;
 
 	gsl_monte_function F = { 
 		&ENIntegrator::integrand, 3, this
@@ -121,7 +120,7 @@ double ENIntegrator::Integrate(int iu, int w, int l) {
 
 	gsl_monte_vegas_integrate(
 		&F, lowerBounds, upperBounds, 3, calls, 
-		rng, state, &result, &error
+		rng, state, &result, error
 	);
 
 	return result;
