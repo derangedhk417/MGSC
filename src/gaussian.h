@@ -38,6 +38,17 @@ public:
 
 public:
 
+	// Adds another term to the list of terms by reinitializing
+	// and copying arrays as necessary.
+	void pushTerm(double * _A, double * _s, double _C);
+
+	// Removes the term at the top of the stack.
+	void popTerm();
+
+	// Used to set the number of calls to the integrand that can
+	// be made by the monte carlo integrator. 
+	void setMaxCalls(int ncalls);
+
 	// This section contains the primary functionality of the class,
 	// calculation of the expectation value of the Hamiltonian.
 

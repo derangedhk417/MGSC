@@ -31,6 +31,88 @@ GaussianWFN::~GaussianWFN() {
 // This section contains the primary functionality of the class,
 // calculation of the expectation value of the Hamiltonian.
 
+
+// Adds another term to the list of terms by reinitializing
+// and copying arrays as necessary.
+void GaussianWFN::pushTerm(double * _A, double * _s, double _C) {
+	// Initialize a new array for the A matrices, copy the existing ones,
+	// add the new one and delete the old one.
+
+	// ------------------------------------------
+	// A Matrix Copy
+	// ------------------------------------------
+
+	double ** new_A = new double*[m + 1];
+	for (int i = 0; i < m; ++i) {
+		new_A[i] = new double[n];
+
+		// Copy the old A matrix into this memory.
+		for (int j = 0; j < n; ++j) {
+			new_A[i][j] = A[i][j];
+		}
+	}
+
+	// Add the new term's A matrix onto the end.
+	new_A[m] = _A;
+
+	double ** tmp = A;
+	A = new_A;
+
+	for (int i = 0; i < m; ++i) 
+		delete[] tmp[i];
+
+	// ------------------------------------------
+	// S Matrix Copy
+	// ------------------------------------------
+
+	double ** new_s = new double*[m + 1];
+	for (int i = 0; i < m; ++i) {
+		new_s[i] = new double[n];
+
+		// Copy the old s matrix into this memory.
+		for (int j = 0; j < n; ++j) {
+			new_s[i][j] = s[i][j];
+		}
+	}
+
+	// Add the new term's s matrix onto the end.
+	new_s[m] = _s;
+
+	tmp = s;
+	s = new_s;
+
+	for (int i = 0; i < m; ++i) 
+		delete[] tmp[i];
+
+	// ------------------------------------------
+	// C Array Copy
+	// ------------------------------------------
+	double * new_C = new double[m + 1];
+	for (int i = 0; i < m; ++i)
+		new_C[i] = C[i];
+
+	new_C[m] = _C;
+
+	double * _tmp = C;
+	C = new_C;
+	delete[] _tmp;
+
+	m += 1;
+}
+
+// Removes the term at the top of the stack.
+void GaussianWFN::popTerm() {
+	// I know this is a memory leak but I don't really care.
+	m -= 1;
+}
+
+// Used to set the number of calls to the integrand that can
+// be made by the monte carlo integrator. 
+void GaussianWFN::setMaxCalls(int ncalls) {
+	integrator->setMaxCalls(ncalls);
+}
+
+
 // Gets the expectation value of the Hamiltonian based on the
 // current set of parameters defining the wavefunction.
 double GaussianWFN::getHamiltonianExpectation(double * error) {

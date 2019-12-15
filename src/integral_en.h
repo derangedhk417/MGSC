@@ -60,6 +60,9 @@ public:
 	double R2;
 	double R3;
 
+	// Used to set the number of calls to the integrand that can be made.
+	void setMaxCalls(int ncalls);
+
 	// Given the three indices that define the integral being calculated,
 	// sets the lowerBounds and upperBounds members of the class to 
 	// values appropriate for the given width, nuclei location, gaussian

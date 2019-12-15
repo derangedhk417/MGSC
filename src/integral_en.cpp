@@ -47,6 +47,11 @@ ENIntegrator::~ENIntegrator() {
 	gsl_monte_vegas_free(state);
 }
 
+// Used to set the number of calls to the integrand that can be made.
+void ENIntegrator::setMaxCalls(int ncalls) {
+	this->maxCalls = ncalls;
+}
+
 // Given the three indices that define the integral being calculated,
 // sets the lowerBounds and upperBounds members of the class to 
 // values appropriate for the given width, nuclei location, gaussian
