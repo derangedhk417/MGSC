@@ -55,6 +55,13 @@ public:
 		double lower[] = {-3/sqrtf(A1), -3/sqrtf(A1), -3/sqrtf(A1)};
 		double upper[] = { 3/sqrtf(A1),  3/sqrtf(A1),  3/sqrtf(A1)};
 
+		// std::cout << "Lower Bounds: " << std::endl;
+		// std::cout << lower[0] << "   " << lower[1] << "   " << lower[2] << std::endl;
+
+		// std::cout << "Upper Bounds: " << std::endl;
+		// std::cout << upper[0] << "   " << upper[1] << "   " << upper[2] << std::endl;
+
+
 		gsl_monte_function F = { 
 			&ElectronNucleiIntegrator::integrand, 3, this
 		};

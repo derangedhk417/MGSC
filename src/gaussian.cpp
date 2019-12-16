@@ -1,205 +1,233 @@
-// This file defines the full gaussian wavefunction and 
-// all code necessary to work with it.
-#include <iostream>
+// Author:  Adam J. Robinson
+// Summary: This file contains implementation of the Gaussian trial 
+//          wavefunction used by MGSC. Some of the code is delegated to other
+//          files for readability. Wherever possible, I attempt to name 
+//          variables the same way that they are named in the mathematical
+//          documentation.
+
+#include <iostream>   // Used only in DEBUG mode for error messages
 #include <mathimf.h>
-#include <chrono>
+#include <chrono>     // Used in profile mode 
 #include "constants.h"
-//#include "en_integrator.cpp"
-//#include "en_integrator_alt.cpp"
-#include "en_integrator_monte_carlo.cpp"
+#include "integral_en.h"
+#include "gaussian.h"
 
-#define DEBUG
-#undef  DEBUG
+// Initializes a Gaussian trial wavefunction with a given number of 
+// Gaussian terms. The variables annotated above need to be given a value
+// before the wavefunction is actually useable.
+GaussianWFN::GaussianWFN(int nterms, int nelectrons) {
+	// In a future version, this will be 3 times and number of electrons.
+	// Right now it is just going to be 3, corresponding to a single 
+	// electron.
+	n = nelectrons * 3;
+	m = nterms;
 
-// This is the width around the center of the gaussian terms
-// for which the integral will be carried out. This is based
-// on the assumption that the integral doesn't need to be 
-// carried out to infinity, because the integrand will go to
-// zero very quickly at distances far from the center of the
-// gaussian and the nucleus.
-const float range = 10.0;
+	integrator = new ENIntegrator(this, width, ncalls);
+}
 
-// This is passed to the integrand for the electron - nucleus
-// integral by the DynamicIntegrator class.
-struct IntegrandParameters {
-	float A1;
-	float A2;
-	float A3;
-	float s1;
-	float s2;
-	float s3;
-	float *R;
-};
+GaussianWFN::~GaussianWFN() {
+	delete integrator;
+}
+// This section contains the primary functionality of the class,
+// calculation of the expectation value of the Hamiltonian.
 
-class GaussianWavefunction {
-public:
-	int      m;  // Number of terms
-	int      n;  // Number of inputs
-	float ** A;  // Shape matrices (really vectors due to simplifications)
-	float ** s;  // Shift matrices (really vectors)
-	float  * C;  // Constants on each Gaussian term
-	float ** R;  // List of nuclear coordinates
-	int      Nu; // Number of nuclei
-	float  * Q;  // List of nuclear charges
-	
-	float * lowerBounds;
-	float * upperBounds;
 
-	double relerr;
-	int    size;
+// Adds another term to the list of terms by reinitializing
+// and copying arrays as necessary.
+void GaussianWFN::pushTerm(double * _A, double * _s, double _C) {
+	// Initialize a new array for the A matrices, copy the existing ones,
+	// add the new one and delete the old one.
 
-	GaussianWavefunction(int nterms, double relerr, int size) {
-		// In a future version, this will be 3 times and number of electrons.
-		// Right now it is just going to be 3, corresponding to a single 
-		// electron.
-		n = 3;
-		m = nterms;
+	// ------------------------------------------
+	// A Matrix Copy
+	// ------------------------------------------
 
-		this->relerr = relerr;
-		this->size   = size;
+	double ** new_A = new double*[m + 1];
+	for (int i = 0; i < m; ++i) {
+		new_A[i] = new double[n];
+
+		// Copy the old A matrix into this memory.
+		for (int j = 0; j < n; ++j) {
+			new_A[i][j] = A[i][j];
+		}
 	}
 
-// Math
-public:
-	// This calculates the normalization constant for the entire 
-	// wavefunction.
-	float getNormalizationConstant() {
-		// We basically need to sum the integral over all space of each
-		// term. Each term is multiplied by it's corresponding C coefficient.
-		// We then return the reciprocal of this sum.
+	// Add the new term's A matrix onto the end.
+	new_A[m] = _A;
 
-		float totalsum = 0.0;
-		for (int outer_tidx = 0; outer_tidx < m; ++outer_tidx) {
-			for (int tidx = 0; tidx < m; ++tidx) {
-				float termsum = 1.0;
-				for (int iidx = 0; iidx < n; ++iidx) {
-					float _s      = s[tidx][iidx] + s[outer_tidx][iidx];
-					float _A      = A[tidx][iidx] + A[outer_tidx][iidx];
-					float ssquare = _s*_s;
-					float aterm   = _A;
-					termsum *= sqrtf(pi / aterm)*expf(ssquare / (4.0 * aterm));
-				}
-				termsum *= C[tidx]*C[outer_tidx];
-				totalsum += termsum;
+	double ** tmp = A;
+	A = new_A;
+
+	for (int i = 0; i < m; ++i) 
+		delete[] tmp[i];
+
+	// ------------------------------------------
+	// S Matrix Copy
+	// ------------------------------------------
+
+	double ** new_s = new double*[m + 1];
+	for (int i = 0; i < m; ++i) {
+		new_s[i] = new double[n];
+
+		// Copy the old s matrix into this memory.
+		for (int j = 0; j < n; ++j) {
+			new_s[i][j] = s[i][j];
+		}
+	}
+
+	// Add the new term's s matrix onto the end.
+	new_s[m] = _s;
+
+	tmp = s;
+	s = new_s;
+
+	for (int i = 0; i < m; ++i) 
+		delete[] tmp[i];
+
+	// ------------------------------------------
+	// C Array Copy
+	// ------------------------------------------
+	double * new_C = new double[m + 1];
+	for (int i = 0; i < m; ++i)
+		new_C[i] = C[i];
+
+	new_C[m] = _C;
+
+	double * _tmp = C;
+	C = new_C;
+	delete[] _tmp;
+
+	m += 1;
+}
+
+// Removes the term at the top of the stack.
+void GaussianWFN::popTerm() {
+	// I know this is a memory leak but I don't really care.
+	m -= 1;
+}
+
+// Used to set the number of calls to the integrand that can
+// be made by the monte carlo integrator. 
+void GaussianWFN::setMaxCalls(int ncalls) {
+	integrator->setMaxCalls(ncalls);
+}
+
+
+// Gets the expectation value of the Hamiltonian based on the
+// current set of parameters defining the wavefunction.
+double GaussianWFN::getHamiltonianExpectation(double * error) {
+	*error = 0.0;
+
+	double B = getNormalizationConstant();
+	double T = getKineticExpectation(B);
+	double V = getPotentialExpectation(B, error);
+
+	return T + V;
+}
+
+// This calculates the value denoted 'B' in the documentation. 
+// The value is calculated such that |B|^2 multiplied by the 
+// integral over all space of |wavefunction|^2 will always be
+// unity.
+double GaussianWFN::getNormalizationConstant() {
+	// We basically need to sum the integral over all space of each
+	// term. Each term is multiplied by it's corresponding C coefficient.
+	// We then return the reciprocal of this sum.
+
+	double totalsum = 0.0;
+	for (int outer_tidx = 0; outer_tidx < m; ++outer_tidx) {
+		for (int tidx = 0; tidx < m; ++tidx) {
+			double termsum = 1.0;
+			for (int iidx = 0; iidx < n; ++iidx) {
+				double _s      = s[tidx][iidx] + s[outer_tidx][iidx];
+				double _A      = A[tidx][iidx] + A[outer_tidx][iidx];
+				double ssquare = _s*_s;
+				double aterm   = _A;
+				termsum *= sqrt(pi / aterm)*exp(ssquare / (4.0 * aterm));
 			}
-		}		
+			termsum  *= C[tidx] * C[outer_tidx];
+			totalsum += termsum;
+		}
+	}		
 
-		return 1.0 / sqrtf(totalsum);
-	}
+	return 1.0 / sqrt(totalsum);
+}
 
-	// Gets the expectation value of the Hamiltonian under the current
-	// conditions.
-	float getHamiltonianExpectation(float *err) {
-		float B = getNormalizationConstant();
-		float T = getKineticExpectation(B);
-		float V = getPotentialExpectation(B, err);
+// Given the appropriate normalization constant, returns the
+// expectation value of the kinetic energy for the given set 
+// of parameters.
+double GaussianWFN::getKineticExpectation(double B) {
+	double coefficient  = -((B*B)*(N_hbar*N_hbar) / (2*N_me));
+	       coefficient *= pow(pi, ((double)n) / 2.0);
 
+	double sum         = 0.0;
 
-#ifdef DEBUG
+	for (int j_prime = 0; j_prime < m; ++j_prime) {
+		for (int j = 0; j < m; ++j) {
+			for (int i = 0; i < n; ++i) {
+				double D_ijjp       = A[j_prime][i] + A[j][i];
+				double F_ijjp       = s[j_prime][i] + s[j][i];
+				double coefficient1 = C[j_prime] * C[j];
 
-		std::cout << "B: " << B << std::endl;
-		std::cout << "T: " << T << std::endl;
-		std::cout << "V: " << V << std::endl;
+				double Gamma_t2       = (s[j][i]*s[j][i] - 2*A[j][i]);
+				       Gamma_t2      *= (1/sqrt(D_ijjp));
+				double intermediate1  = (A[j][i]*A[j][i]);
+				       intermediate1 *= (2*D_ijjp + F_ijjp*F_ijjp);
+				       intermediate1 *= (1 / pow(D_ijjp, 2.5));
+				       Gamma_t2      += intermediate1;
+				double intermediate2  = 2*A[j][i]*s[j][i]*F_ijjp;
+					   intermediate2 *= (1 / pow(D_ijjp, 1.5));
+				       Gamma_t2      -= intermediate2;
+				double Gamma          = exp((F_ijjp*F_ijjp) / (4*D_ijjp));
+				       Gamma         *= Gamma_t2;
 
-#endif
-
-		return T + V;
-	}
-
-	// Given the appropriate normalization constant, returns the
-	// expectation value of the kinetic energy for the given set 
-	// of parameters.
-	float getKineticExpectation(float B) {
-		float coefficient = -((B*B)*(N_hbar*N_hbar) / (2*N_me))*powrf(pi, ((float)n) / 2.0);
-		float sum         = 0.0;
-
-		for (int j_prime = 0; j_prime < m; ++j_prime) {
-			for (int j = 0; j < m; ++j) {
-				for (int i = 0; i < n; ++i) {
-					float D_ijjp       = A[j_prime][i] + A[j][i];
-					float F_ijjp       = s[j_prime][i] + s[j][i];
-					float coefficient1 = C[j_prime] * C[j];
-
-					float Gamma_t2  = (s[j][i]*s[j][i] - 2*A[j][i])*(1/sqrtf(D_ijjp));
-					Gamma_t2       += (A[j][i]*A[j][i])*(2*D_ijjp + F_ijjp*F_ijjp)*(1 / powrf(D_ijjp, 2.5));
-					Gamma_t2       -= 2*A[j][i]*s[j][i]*F_ijjp*(1 / powrf(D_ijjp, 1.5));
-					float Gamma     = expf((F_ijjp*F_ijjp) / (4*D_ijjp))*Gamma_t2;
-
-					// Now we compute the product term.
-					float product = 1.0;
-					for (int l = 0; l < n; ++l) {
-						if (l != i) {
-							float D_ljjp       = A[j_prime][l] + A[j][l];
-							float F_ljjp       = s[j_prime][l] + s[j][l];
-							product *= (1 / sqrtf(D_ljjp))*expf((F_ljjp*F_ljjp) / (4 * D_ljjp));
-						}
+				// Now we compute the product term.
+				double product = 1.0;
+				for (int l = 0; l < n; ++l) {
+					if (l != i) {
+						double D_ljjp       = A[j_prime][l] + A[j][l];
+						double F_ljjp       = s[j_prime][l] + s[j][l];
+						product *= (1 / sqrt(D_ljjp));
+						product *= exp((F_ljjp*F_ljjp) / (4 * D_ljjp));
 					}
-
-					sum += coefficient1*Gamma*product;
 				}
+
+				sum += coefficient1 * Gamma * product;
 			}
 		}
-
-		return coefficient * sum;
 	}
 
-	// Given the appropriate normalization constant, returns the
-	// expectation value of the potential energy for the given set 
-	// of parameters.
-	float getPotentialExpectation(float B, float * err) {
-		float coefficient = (N_qe*B*B) / N_fpien;
+	return coefficient * sum;
+}
 
-#ifdef DEBUG
-		std::cout << "Outer Coefficient: " << coefficient << std::endl;
-#endif
+// Given the appropriate normalization constant, returns the
+// expectation value of the potential energy for the given set 
+// of parameters.
+double GaussianWFN::getPotentialExpectation(double B, double * error) {
+	double coefficient = (N_qe*B*B) / N_fpien;
 
-		float sum = 0.0;
-		for (int iu = 0; iu < Nu; ++iu) {
-			// Normally there would be another loop here over 
-			// the number of electrons, but I'm omitting that in this
-			// version because of time constraints. I am only doing
-			// one electron systems for now.
+	double sum = 0.0;
+	for (int iu = 0; iu < Nu; ++iu) {
+		// Normally there would be another loop here over 
+		// the number of electrons, but I'm omitting that in this
+		// version because of time constraints. I am only doing
+		// one electron systems for now.
 
-			for (int w = 0; w < m; ++w) {
-				for (int l = 0; l < m; ++l) {
-					float coefficient1 = Q[iu] * C[w] * C[l];
-					float integral     = 0.0;
+		for (int w = 0; w < m; ++w) {
+			for (int l = 0; l < m; ++l) {
+				double coefficient1 = Q[iu] * C[w] * C[l];
+				double integral     = 0.0;
+				double integral_err = 0.0;
 
-#ifdef DEBUG
-					std::cout << "Inner Coefficient: " << coefficient1 << std::endl;
-#endif
-
-					// Now we need to set up and calculate the integral
-					// for the electron - nucleus interation.
-					float A1 = A[w][0] + A[l][0];
-					float A2 = A[w][1] + A[l][1];
-					float A3 = A[w][2] + A[l][2];
-
-					float s1 = s[w][0] + s[l][0];
-					float s2 = s[w][1] + s[l][1];
-					float s3 = s[w][2] + s[l][2];
-
-					ElectronNucleiIntegrator integrator(this->size);
-					integrator.A1 = A1;
-					integrator.A2 = A2;
-					integrator.A3 = A3;
-					integrator.s1 = s1;
-					integrator.s2 = s2;
-					integrator.s3 = s3;
-					integrator.R  = R[iu];
-
-					integral = (float)integrator.Integrate(this->relerr, err);
-					sum += integral * coefficient1;
-
-
-#ifdef DEBUG
-					std::cout << "Integral: " << integral << std::endl;
-#endif
-				}
+				integral = integrator->Integrate(iu, w, l, &integral_err);
+				sum    += integral * coefficient1;
+				*error += fabs(integral_err * coefficient1);
 			}
 		}
-
-		return -coefficient * sum;
 	}
 
-};
+
+	*error *= coefficient;
+	*error  = fabs(*error);
+	return -coefficient * sum;
+}

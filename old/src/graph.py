@@ -1,7 +1,3 @@
-# This is meant for graphing the one dimensional sweep of radially
-# symmetric single term gaussians. The first argument passed in the
-# command line should be the file to graph.
-
 import matplotlib.pyplot as plt
 import numpy             as np
 import sys
@@ -86,7 +82,7 @@ if __name__ == '__main__':
 
 
 	
-	ax.scatter(scales[::1], exps[::1], s=16)
+	ax.scatter(scales[::100], exps[::100], s=16)
 	ax.set_xlabel(r"Gaussian Full Width Half Max $[\mathsf{nm}]$", fontsize=20)
 	ax.set_ylabel(r"$E_{gs}\;\mathsf{[eV]}$", fontsize=20)
 	plt.title("Expectation Value of the Hamiltonian as a function of Gaussian Full Width Half Max", fontsize=24)

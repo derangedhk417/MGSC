@@ -6,6 +6,7 @@ import matplotlib as mpl
 
 if __name__ == '__main__':
 	fname = sys.argv[1]
+	# Note: 3000 points in the monte carlo were used
 
 
 	mpl.rcParams['axes.linewidth'] = 2
@@ -44,8 +45,8 @@ if __name__ == '__main__':
 	for idx in range(len(i)):
 		grid[i[idx]][j[idx]] = E[idx]
 
-	N_A1 = 16
-	N_A2 = 16
+	N_A1 = 64
+	N_A2 = 64
 
 	A1_min = 1e5
 	A1_max = 1e7
@@ -62,9 +63,9 @@ if __name__ == '__main__':
 	i_label = np.sqrt(np.log(2) / np.linspace(A1_min, A1_max, 8)) * 0.2e3
 	j_space = np.linspace(0, 1, 8)
 	j_label = np.sqrt(np.log(2) / np.linspace(A2_min, A2_max, 8)) * 0.2e3
-	ax.set_yticks(i_space * (N_A1 - 1))
+	ax.set_yticks(i_space * 63)
 	ax.set_yticklabels(["%0.3f"%i for i in i_label])
-	ax.set_xticks(j_space * (N_A2 - 1))
+	ax.set_xticks(j_space * 63)
 	ax.set_xticklabels(["%0.3f"%i for i in j_label])
 
 

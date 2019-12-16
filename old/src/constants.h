@@ -1,7 +1,6 @@
 // This file just defines relevant constants.
 
-const float pi  = 3.141592653589793238;
-const float ln2 = 0.69314718056; 
+const float pi = 3.141592653589793238;
 
 // A prefix of N_ indicates that the constant corresponds to the
 // natural unit.

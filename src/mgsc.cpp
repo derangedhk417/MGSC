@@ -1,213 +1,148 @@
+// Author:  Adam J. Robinson
+// Summary: This file contains a simple attempt at using a monte-carlo like
+//          method to find the ground state energy of the hydrogen atom. It
+//          works by simply guessing random terms to add to the wavefunction
+//          and then accepting or rejecting them based on whether or not they
+//          lower the expectation value.
+
 #include <iostream>
 #include <mathimf.h>
 #include <chrono>
-#include "gaussian.cpp"
-#include <gsl/gsl_multimin.h>
+#include "gaussian.h"
+#include "constants.h"
+#include "random.h"
 
 using namespace std;
 
-double ExpecationValueFinal(const gsl_vector * x, float * err) {
-	float _A1 = gsl_vector_get(x, 0);
-	float _A2 = gsl_vector_get(x, 1);
-	float _C1 = gsl_vector_get(x, 2);
-	float _C2 = gsl_vector_get(x, 3);
+int main() {
+	// Initialize a wavefunction with a single term.
+	GaussianWFN wavefn(1, 1);
 
-	float A1[]  = {_A1, _A1, _A1};
-	float A2[]  = {_A2, _A2, _A2};
-	float ** A  = new float*[2];
-	A[0]        = A1;
-	A[1]        = A2;
+	// Start with the best value of a for a single
+	// term. 
+	double initial = 3.945310E+06;
 
-	float s1[] = {0.0, 0.0, 0.0};
-	float s2[] = {0.0, 0.0, 0.0};
-	float ** s = new float*[2];
-	s[0]       = s1;
-	s[1]       = s2;
+	double * A0 = new double[3];
+	A0[0] = initial;
+	A0[1] = initial;
+	A0[2] = initial;
 
-	float C[]  = {_C1, _C2};
-	float R1[] = {0.0, 0.0, 0.0};
-	float ** R = new float*[1];
-	R[0]       = R1;
+	double ** A = new double*[1];
+	A[0]        = A0;
+	wavefn.A    = A;
 
-	float Q[] = {N_qe};
-	
-	GaussianWavefunction wavefn(2, 0.01, 256);
-	wavefn.A  = A;
-	wavefn.s  = s;
-	wavefn.C  = C;
-	wavefn.R  = R;
+	double * s0 = new double[3];
+	s0[0] = 0.0;
+	s0[1] = 0.0;
+	s0[2] = 0.0;
+
+	double ** s = new double*[1];
+	s[0]        = s0;
+	wavefn.s    = s;
+
+	double * C = new double[1];
+	C[0]       = 1.0;
+	wavefn.C   = C;
+
+	double * R0 = new double[3];
+	double ** R = new double*[1];
+	R[0]        = R0;
+	wavefn.R    = R;
+
+	double * Q = new double[1];
+	Q[0]       = N_qe;
+
 	wavefn.Nu = 1;
-	wavefn.Q  = Q; 
+	wavefn.Q  = Q;
 
-	float res = wavefn.getHamiltonianExpectation(err);
-	return res;
-}
+	NormalDistribution *A_rng = new NormalDistribution(initial, initial);
+	NormalDistribution *C_rng = new NormalDistribution(1.0, 2.0);
 
-double ExpectationValue(const gsl_vector * x, void * params) {
-	float _A1 = gsl_vector_get(x, 0);
-	float _A2 = gsl_vector_get(x, 1);
-	float _C1 = gsl_vector_get(x, 2);
-	float _C2 = gsl_vector_get(x, 3);
+	// Stores the last excepted expectation value of the Hamiltonian.
+	double lastEXP  = 0.0;
+	double lastErr  = 0.0;
+	double lastStd  = initial;
+	double lastStd2 = 5.0;
+	int    nTerms   = 1;   // Current number of accepted terms.
+	int    nGuess   = 0;   // Current number of terms guessed.
 
-	float A1[]  = {_A1, _A1, _A1};
-	float A2[]  = {_A2, _A2, _A2};
-	float ** A  = new float*[2];
-	A[0]        = A1;
-	A[1]        = A2;
+	lastEXP = wavefn.getHamiltonianExpectation(&lastErr);
+	wavefn.setMaxCalls(5000);
 
-	float s1[] = {0.0, 0.0, 0.0};
-	float s2[] = {0.0, 0.0, 0.0};
-	float ** s = new float*[2];
-	s[0]       = s1;
-	s[1]       = s2;
+	cout << "Guess, Expectation" << endl;
+	for (int i = 0; i < 500; ++i) {
+		// Guess a new term to add.
+		double * newA  = new double[3];
+		double * newS  = new double[3];
+		double   newC  = C_rng->read();
+		double   A_val = abs(A_rng->read());
 
-	float C[]  = {_C1, _C2};
-	float R1[] = {0.0, 0.0, 0.0};
-	float ** R = new float*[1];
-	R[0]       = R1;
+		newA[0] = A_val;
+		newA[1] = A_val;
+		newA[2] = A_val;
 
-	float Q[] = {N_qe};
-	
-	GaussianWavefunction wavefn(2, 0.01, 256);
-	wavefn.A  = A;
-	wavefn.s  = s;
-	wavefn.C  = C;
-	wavefn.R  = R;
-	wavefn.Nu = 1;
-	wavefn.Q  = Q; 
+		newS[0] = 0.0;
+		newS[1] = 0.0;
+		newS[2] = 0.0;
 
-	float err;
-	float res = wavefn.getHamiltonianExpectation(&err);
-	return res;
-}
+		wavefn.pushTerm(newA, newS, newC);
 
-void ExpectationValueGradient(const gsl_vector * x, void * params, gsl_vector * grad) {
-	float _A1 = gsl_vector_get(x, 0);
-	float _A2 = gsl_vector_get(x, 1);
-	float _C1 = gsl_vector_get(x, 2);
-	float _C2 = gsl_vector_get(x, 3);
-	double dx  = 1e-2; 
-	double dx2 = 1e-2;
+		double exp = wavefn.getHamiltonianExpectation(&lastErr);
 
-	// Get the gradient with respect to all four variables.
-	float dA1;
-	float dA2;
-	float dC1;
-	float dC2;
-
-	float currentValue = ExpectationValue(x, NULL);
-
-	gsl_vector_set((gsl_vector *)x, 0, _A1 + dx);
-	float offsetA1 = ExpectationValue(x, NULL);
-	gsl_vector_set((gsl_vector *)x, 0, _A1);
-	dA1 = (offsetA1 - currentValue) / dx;
-
-	gsl_vector_set((gsl_vector *)x, 1, _A2 + dx);
-	float offsetA2 = ExpectationValue(x, NULL);
-	gsl_vector_set((gsl_vector *)x, 1, _A2);
-	dA2 = (offsetA2 - currentValue) / dx;
-
-	gsl_vector_set((gsl_vector *)x, 2, _C1 + dx2);
-	float offsetC1 = ExpectationValue(x, NULL);
-	gsl_vector_set((gsl_vector *)x, 2, _C1);
-	dC1 = (offsetC1 - currentValue) / dx2;
-
-	gsl_vector_set((gsl_vector *)x, 3, _C2 + dx2);
-	float offsetC2 = ExpectationValue(x, NULL);
-	gsl_vector_set((gsl_vector *)x, 3, _C2);
-	dC2 = (offsetC2 - currentValue) / dx2;
-
-	gsl_vector_set(grad, 0, dA1);
-	gsl_vector_set(grad, 1, dA2);
-	gsl_vector_set(grad, 2, dC1);
-	gsl_vector_set(grad, 3, dC2);
-}
-
-void Combined(const gsl_vector * x, void * params, double * f, gsl_vector * grad) {
- 	*f = ExpectationValue(x, NULL);
- 	ExpectationValueGradient(x, NULL, grad);
-}
-
-
-int main(int argc, char ** argv) {
-	int N_A1 = 30;
-	int N_A2 = 30;
-
-	float A1_min = 5e5;
-	float A1_max = 1e7;
-	float A2_min = 1e6;
-	float A2_max = 9e7;
-
-	float best = 1.0;
-
-	for (int i = 0; i < N_A1; ++i) {
-		float A1_inc     = (A1_max - A1_min) / N_A1;
-		float current_A1 = A1_min + i * A1_inc;
-
-		for (int j = 0; j < N_A2; ++j) {
-			float A2_inc     = (A2_max - A2_min) / N_A2;
-			float current_A2 = A2_min + i * A2_inc;
-
-			size_t iter = 0;
-			int status;
-
-			const gsl_multimin_fdfminimizer_type * T;
-			gsl_multimin_fdfminimizer * s;
-
-			double params[] = {1.0};
-
-			gsl_vector * x;
-			gsl_multimin_function_fdf F;
-
-			F.n      = 4;
-			F.f      = &ExpectationValue;
-			F.df     = &ExpectationValueGradient;
-			F.fdf    = &Combined;
-			F.params = params;
-
-			x = gsl_vector_alloc(4);
-			gsl_vector_set(x, 0, current_A1);
-			gsl_vector_set(x, 1, current_A2);
-			gsl_vector_set(x, 2, 1.0);
-			gsl_vector_set(x, 3, 0.2);
-
-			T = gsl_multimin_fdfminimizer_conjugate_fr;
-			s = gsl_multimin_fdfminimizer_alloc(T, 4);
-
-			gsl_multimin_fdfminimizer_set(s, &F, x, 0.01, 1e-4);
-
-			do {
-				iter++;
-				status = gsl_multimin_fdfminimizer_iterate(s);
-
-				if (status) break;
-
-				status = gsl_multimin_test_gradient(s->gradient, 1e-3);
-
-			} while (status == GSL_CONTINUE && iter < 100);
-
-			float err;
-			float exp = ExpecationValueFinal(x, &err);
-
-			printf("--------------------------------------\n");
-			printf("Results: \n");
-			printf("     Ground State Energy = %f eV\n", exp);
-			printf("     Error               = %f eV\n", err);
-			printf("     A1                  = %f\n", gsl_vector_get(s->x, 0));
-			printf("     A2                  = %f\n", gsl_vector_get(s->x, 1));
-			printf("     C1                  = %f\n", gsl_vector_get(s->x, 2));
-			printf("     C2                  = %f\n", gsl_vector_get(s->x, 3));
-
-			if (exp < best) {
-				best = exp;
-			}
-
-			gsl_multimin_fdfminimizer_free(s);
-			gsl_vector_free(x);
+		if (exp < lastEXP) {
+			cout << nGuess << ", " << exp << endl;
+			lastEXP = exp;
+			nTerms += 1;
+		} else {
+			wavefn.popTerm();
 		}
+
+		nGuess ++;
 	}
 
-	printf("Best Result: %f eV\n", best);
+	cout << "Nterms: " << nTerms << endl;
+	cout << "NGuess: " << nGuess << endl;
 
+
+	// double min = 1.0;
+	// double max = 1e7;
+	// int   N    = 512;
+
+	// double increment = (max - min) / N;
+
+	// cout << "Scale, Error, Expectation" << endl;	
+
+	// for (int i = 0; i < N; ++i) {
+	// 	// Single Term Testing
+	// 	double scale = min + increment * i;
+	// 	double A1[]  = {1.0 * scale, 1.0 * scale, 1.0 * scale};
+	// 	double ** A  = new double*[1];
+	// 	A[0]         = A1;
+
+	// 	double s1[] = {0.0, 0.0, 0.0};
+	// 	double ** s = new double*[1];
+	// 	s[0]        = s1;
+
+	// 	double C[]  = {1.0};
+	// 	double R1[] = {0.0, 0.0, 0.0};
+	// 	double ** R = new double*[1];
+	// 	R[0]        = R1;
+
+	// 	double Q[] = {N_qe};
+		
+	// 	GaussianWFN wavefn(1, 1);
+	// 	wavefn.A  = A;
+	// 	wavefn.s  = s;
+	// 	wavefn.C  = C;
+	// 	wavefn.R  = R;
+	// 	wavefn.Nu = 1;
+	// 	wavefn.Q  = Q; 
+		
+	// 	double error;
+	// 	double expectation = wavefn.getHamiltonianExpectation(&error);
+	
+	// 	cout << scale << ", " << error << ", " << expectation << endl;
+	// }
+	
 	return 0;
 }
