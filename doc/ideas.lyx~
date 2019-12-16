@@ -126,6 +126,10 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Section
+General Ideas
+\end_layout
+
+\begin_layout Subsection
 A Method for Determining Excited State Energies
 \end_layout
 
@@ -142,6 +146,43 @@ All stationary states are orthogonal.
  the expectation value of the Hamiltonian.
  Further analysis will be neccesary to determine whether or not this process
  will actually be practical.
+\end_layout
+
+\begin_layout Subsection
+Monte Carlo Optimization
+\end_layout
+
+\begin_layout Standard
+Perform Monte Carlo based determination of the ground state energy.
+ The process can be made faster by determining a rate at which to decrease
+ the size of the terms added to the wavefunction.
+ This rate would have to be determined through experimentation (probably
+ not analyticlly, but maybe).
+ The mean and standard deviation of the change in energy expected from each
+ step could then be estimated.
+ These values can be used to adjust the accuracy of the Monte Carlo integration
+ techniques being used.
+ Early in the process, low accuracy integration can be used, so long as
+ the error is an order of magnitude less than the expected change in the
+ energy with each step.
+\end_layout
+
+\begin_layout Subsection
+Quantum Dynamics
+\end_layout
+
+\begin_layout Standard
+Derive and expression for the change in the expectation value of the Hamiltonian
+ with respect to the change in the nuclear coordinates.
+ This should be possible to do analytically.
+ Use this expression to calculate the force at each point in time and perform
+ velocity-verlet integration, much like a traditional molecular dynamics
+ simulation.
+ 
+\end_layout
+
+\begin_layout Section
+Optimization Ideas
 \end_layout
 
 \end_body

@@ -126,6 +126,10 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Section
+General Ideas
+\end_layout
+
+\begin_layout Subsection
 A Method for Determining Excited State Energies
 \end_layout
 
@@ -144,7 +148,7 @@ All stationary states are orthogonal.
  will actually be practical.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Monte Carlo Optimization
 \end_layout
 
@@ -161,7 +165,36 @@ Perform Monte Carlo based determination of the ground state energy.
  Early in the process, low accuracy integration can be used, so long as
  the error is an order of magnitude less than the expected change in the
  energy with each step.
- 
+\end_layout
+
+\begin_layout Subsection
+Quantum Dynamics
+\end_layout
+
+\begin_layout Standard
+Derive and expression for the change in the expectation value of the Hamiltonian
+ with respect to the change in the nuclear coordinates.
+ This should be possible to do analytically.
+ Use this expression to calculate the force at each point in time and perform
+ velocity-verlet integration, much like a traditional molecular dynamics
+ simulation.
+\end_layout
+
+\begin_layout Subsection
+Solid State Approximation
+\end_layout
+
+\begin_layout Standard
+Determine a means of making the wavefunctions and Hamiltonian contains a
+ perdiodic boundary condition.
+ In theory, this would make the system capable of finding energies for bulk
+ crystal structures.
+ If this was to work exceptionally well, it might be a competitor to DFT
+ for certain systems.
+\end_layout
+
+\begin_layout Section
+Optimization Ideas
 \end_layout
 
 \end_body
