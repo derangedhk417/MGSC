@@ -70,7 +70,7 @@ int main() {
 	wavefn.setMaxCalls(5000);
 
 	cout << "Guess, Expectation" << endl;
-	for (int i = 0; i < 1000; ++i) {
+	for (int i = 0; i < 500; ++i) {
 		// Guess a new term to add.
 		double * newA  = new double[3];
 		double * newS  = new double[3];
